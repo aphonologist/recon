@@ -1,4 +1,4 @@
-import random
+import random, copy
 from language import Language
 
 class Family:
@@ -13,8 +13,9 @@ class Family:
 				r = random.random()
 				if r <= p:
 					# Copy the language
+					newrank = copy.deepcopy(language.ranking)
 					newname = str(len(self.languages) + 1)
-					newlanguage = Language(language.constraints, language.ranking, newname)
+					newlanguage = Language(language.constraints, newrank, newname)
 					self.languages[language].append(newlanguage)
 					newlanguages.append(newlanguage)
 				else:
