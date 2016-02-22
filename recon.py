@@ -43,9 +43,9 @@ for language in languages:
 
 # Calculate the distance between languages
 lcount = len(languages)
-distances = np.array([[0 for i in range(lcount)] for i in range(lcount)])
-print(distances)
+distances = [[0 for i in range(lcount)] for i in range(lcount)]
 for l1 in range(lcount):
 	for l2 in range(l1, lcount):
-		distances[l1, l2] = cosine(languages[l1], languages[l2])
-print(distances)
+		distances[l1][l2] = cosine(languages[l1], languages[l2])
+for row in distances:
+	print(row)
