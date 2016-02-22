@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import random, sys, numpy, fastcluster, scipy.cluster.hierarchy
+import random, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
 from language import Language
 from family import Family
 from cosine_similarity import cosine
@@ -51,4 +51,5 @@ for l1 in range(lcount):
 # Cluster!
 npdistances = numpy.array(distances)
 thecluster = fastcluster.linkage(npdistances, method='single')
-scipy.cluster.hierarchy.dendrogram(thecluster)
+dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster)
+plt.savefig('temp.png')
