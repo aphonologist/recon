@@ -11,6 +11,7 @@ class Language:
 			self.ranking = ranking
 		self.__name__ = name
 		self.normalized_ranking = []
+		self.length = 0.0
 
 	def __str__(self):
 		return self.__name__
@@ -37,15 +38,11 @@ class Language:
 				else:
 					pairwise_ranking.append(0.0)
 		# Get length of vector: square root of sum of squares of values
-		length = 0
 		for p in pairwise_ranking:
-			length += p**2
-		length **= .5
+			self.length += p**2
+		self.length **= .5
 		# Divide each entry in pairwise vector by the length of the vector
 		self.normalized_ranking = [p/length for p in pairwise_ranking]
-		print(pairwise_ranking)
-		print(self.normalized_ranking)
-		print(length)
 
 	def tweak_ranking(self):
 		# Randomly modify ranking

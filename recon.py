@@ -36,6 +36,7 @@ family = Family(randomroot)
 # Evolve family
 family.evolve(l,p)
 languages = family.get_leaves()
-print(languages)
 
-languages[0].normalize_ranking()
+# Normalize ranking vectors in languages
+for language in languages:
+	language.normalize_ranking()
