@@ -92,9 +92,12 @@ testlabeled = get_nodes(testfamily)
 ##to add: flat tree baseline, random binary tree baseline
 
 # Evaluate
-numbersharednodes = 0
+numbersharednodes = 0.0
 for node in goldlabeled:
 	if node in testlabeled:
 		numbersharednodes += 1
+precision = numbersharednodes / len(testlabeled)
+recall = numbersharednodes / len(goldlabeled)
+fscore = 2 * precision * recall / (precision + recall)
 
-print(numbersharednodes)
+print(precision, recall, fscore)
