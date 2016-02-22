@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import random, sys, numpy as np
+import random, sys, numpy, fastcluster
 from language import Language
 from family import Family
 from cosine_similarity import cosine
@@ -47,5 +47,6 @@ distances = [[0 for i in range(lcount)] for i in range(lcount)]
 for l1 in range(lcount):
 	for l2 in range(l1, lcount):
 		distances[l1][l2] = cosine(languages[l1], languages[l2])
-for row in distances:
-	print(row)
+
+# Cluster!
+npdistances = numpy.array(distances)
