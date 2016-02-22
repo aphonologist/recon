@@ -117,8 +117,6 @@ if __name__ == '__main__':
 	c = 10
 	# Maximum number of languages -l
 	l = 25
-	# Number of families -f
-	f = 1
 	# Probability that a language will be copied -p
 	p = .001
 
@@ -128,18 +126,20 @@ if __name__ == '__main__':
 		c = int(args[args.index('-c') + 1])
 	if '-l' in args:
 		l = int(args[args.index('-l') + 1])
-	if '-f' in args:
-		f = int(args[args.index('-f') + 1])
 	if '-p' in args:
 		p = float(args[args.index('-p') + 1])
 
-	# Generate the constraints - numbered 1 to c
-	constraints = [str(x) for x in range(1, c + 1)]
+	# Generate the constraint set - ints in [1,c]
+	constraints = [x for x in range(1, c + 1)]
 
-	# Generate random language
+	# Generate random language to use as root for family
 	randomroot = Language(constraints)
+	print(randomroot.check_for_loops())
+	randomroot.randomize_ranking()
+	for c in randomroot.ranking:
+		print(c,randomroot.ranking[c])
+	print(randomroot.check_for_loops())
 
-	print(randomroot.constraints)
 	sys.exit()
 
 	(langFam, treeArray) = runMain(args.numCons, args.maxLangs, args.copyProb)
