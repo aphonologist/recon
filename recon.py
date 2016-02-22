@@ -3,6 +3,7 @@
 import random, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
 from language import Language
 from family import Family
+from get_labeled_nodes import get_nodes
 
 # Note for later: this is written for artificial data, we'll have to modify this to read actual data from files
 
@@ -35,6 +36,9 @@ family = Family(randomroot)
 # Evolve family
 family.evolve(l,p)
 languages = family.get_leaves()
+languagenames = []
+for language in languages:
+	languagenames.append(language.__name__)
 
 # Normalize ranking vectors in languages
 for language in languages:
@@ -54,5 +58,10 @@ for l1 in range(lcount):
 # Cluster!
 npdistances = numpy.array(distances)
 thecluster = fastcluster.linkage(npdistances, method='single')
-dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster)
+dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
 plt.savefig('temp.png')
+
+# Get labeled nodes from gold tree
+goldlabeled = get_nodes(family.languages)
+
+# Get labeled nodes from test tree

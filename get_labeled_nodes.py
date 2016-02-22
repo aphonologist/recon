@@ -1,15 +1,15 @@
 def get_nodes(tree):
-	# Returns a set of sets of nodes dominated by each internal node in a tree
-	nodes = set([])
+	# Returns a set of sets of leaves dominated by each internal node in a tree
+	nodes = []
 	for node in tree:
-		stack = set([node])
+		stack = [node]
 		tempnodes = set([])
 		while stack:
 			temp = stack.pop()
-			if not tree[temp]:
-				tempnodes.add(temp)
-			else:
+			if tree[temp]:
 				for t in tree[temp]:
-					stack.add(t)
-		nodes.add(tempnodes)
+					stack.append(t)
+			else:
+				tempnodes.add(temp)
+		nodes.append(tempnodes)
 	return nodes
