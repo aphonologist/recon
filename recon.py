@@ -71,7 +71,9 @@ randomroot = Language(constraints)
 randomroot.randomize_ranking()
 
 # Initialize family
-languagefamily = Family(randomroot)
+family = Family(randomroot)
 
 # Evolve family
-languagefamily.evolve(l,p)
+family.evolve(l,p)
+for x in family.languages:
+	print(x, family.languages[x])
