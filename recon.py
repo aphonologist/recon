@@ -47,8 +47,8 @@ for l1 in range(lcount):
 	for l2 in range(l1, lcount):
 		# Normalized vectors have length 1, so cosine similarity is just the dot product
 		cosine = 0.0
-		for i in range(len(v1.normalized_ranking)):
-			sum += v1.normalized_ranking[i] * v2.normalized_ranking[i]
+		for i in range(len(languages[l1].normalized_ranking)):
+			cosine += languages[l1].normalized_ranking[i] * languages[l2].normalized_ranking[i]
 		distances[l1][l2] = cosine
 
 # Cluster!
