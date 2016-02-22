@@ -73,16 +73,28 @@ for i in range(len(thecluster)):
 	thisNode = 'A' + str(num + i + 1)
 	line = thecluster[i]
 	if int(line[0]) <= num:
-		x = languagenames[int(line[0])]
+		x = int(languagenames[int(line[0])])
 	else:
 		x = 'A' + str(int(line[0]))
 	if int(line[1]) <= num:
-		y = languagenames[int(line[1])]
+		y = int(languagenames[int(line[1])])
 	else:
 		y = 'A' + str(int(line[1]))
 	testfamily[thisNode] = [x,y]
+	if x not in testfamily:
+		testfamily[x] = []
+	if y not in testfamily:
+		testfamily[y] = []
 
 # Get labeled nodes from test tree
 testlabeled = get_nodes(testfamily)
 
+##to add: flat tree baseline, random binary tree baseline
 
+# Evaluate
+numbersharednodes = 0
+for node in goldlabeled:
+	if node in testlabeled:
+		numbersharednodes += 1
+
+print(numbersharednodes)

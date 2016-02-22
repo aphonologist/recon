@@ -10,6 +10,6 @@ def get_nodes(tree):
 				for t in tree[temp]:
 					stack.append(t)
 			else:
-				tempnodes.add(temp)
+				tempnodes.add(str(temp))
 		nodes.append(tempnodes)
 	return nodes
