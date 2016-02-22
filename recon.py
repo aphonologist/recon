@@ -38,7 +38,8 @@ family.evolve(l,p)
 languages = family.get_leaves()
 languagenames = []
 for language in languages:
-	languagenames.append(language.__name__)
+	languagenames.append(int(language.__name__))
+languagenames.sort()
 
 # Normalize ranking vectors in languages
 for language in languages:
@@ -64,6 +65,24 @@ plt.savefig('temp.png')
 # Get labeled nodes from gold tree
 goldlabeled = get_nodes(family.languages)
 
+# Parse cluster results into a tree
+num = len(thecluster)
+testfamily = {}
+mapping = {}
+for i in range(len(thecluster)):
+	thisNode = 'A' + str(num + i + 1)
+	line = thecluster[i]
+	if int(line[0]) <= num:
+		x = languagenames[int(line[0])]
+	else:
+		x = 'A' + str(int(line[0]))
+	if int(line[1]) <= num:
+		y = languagenames[int(line[1])]
+	else:
+		y = 'A' + str(int(line[1]))
+	testfamily[thisNode] = [x,y]
+
 # Get labeled nodes from test tree
-print(thecluster)
-# note: replace indices with labels and parse into tree
+testlabeled = get_nodes(testfamily)
+
+
