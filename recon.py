@@ -35,3 +35,5 @@ family = Family(randomroot)
 
 # Evolve family
 family.evolve(l,p)
+languages = family.get_leaves()
+print(languages)

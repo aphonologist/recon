@@ -14,6 +14,9 @@ class Language:
 	def __str__(self):
 		return self.__name__
 
+	def __repr__(self):
+		return self.__name__
+
 	def randomize_ranking(self):
 		# Fully, randomly rank the constraint set
 		random.shuffle(self.constraints)

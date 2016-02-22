@@ -30,3 +30,10 @@ class Family:
 			if not self.languages[language]:
 				count += 1
 		return count
+
+	def get_leaves(self):
+		leaves = []
+		for language in self.languages:
+			if not self.languages[language]:
+				leaves.append(language)
+		return leaves
