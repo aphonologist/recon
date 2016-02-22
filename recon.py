@@ -3,6 +3,7 @@
 import random, sys, numpy
 from language import Language
 from family import Family
+from cosine_similarty import cosine
 
 # Note for later: this is written for artificial data, we'll have to modify this to read actual data from files
 
