@@ -42,7 +42,7 @@ class Language:
 			self.length += p**2
 		self.length **= .5
 		# Divide each entry in pairwise vector by the length of the vector
-		self.normalized_ranking = [p/length for p in pairwise_ranking]
+		self.normalized_ranking = [p/self.length for p in pairwise_ranking]
 
 	def tweak_ranking(self):
 		# Randomly modify ranking

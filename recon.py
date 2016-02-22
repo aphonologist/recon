@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
-import random
-import sys
+import random, sys, numpy
 from language import Language
 from family import Family
 
