@@ -65,3 +65,5 @@ plt.savefig('temp.png')
 goldlabeled = get_nodes(family.languages)
 
 # Get labeled nodes from test tree
+print(thecluster)
+# note: replace indices with labels and parse into tree
