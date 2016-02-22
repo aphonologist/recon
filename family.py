@@ -1,4 +1,5 @@
 import random
+from language import Language
 
 class Family:
 	def __init__(self, rootlang):
@@ -7,8 +8,21 @@ class Family:
 
 	def evolve(self, l, p):
 		while self.count_leaves() < l:
-			newlang = str(len(self.languages) + 1)
-			self.languages[newlang] = []
+			newlanguages = []
+			for language in self.languages:
+				r = random.random()
+				if r <= p:
+					# Copy the language
+					newname = str(len(self.languages) + 1)
+					newlanguage = Language(language.constraints, language.ranking, newname)
+					self.languages[language].append(newlanguage)
+					newlanguages.append(newlanguage)
+				else:
+					# Change the language if it does not have any children
+					if not self.languages[language]:
+						language.tweak_ranking()
+			for newlanguage in newlanguages:
+				self.languages[newlanguage] = []
 	
 	def count_leaves(self):
 		count = 0

@@ -1,15 +1,18 @@
 import random, copy
 
 class Language:
-	def __init__(self, constraints, name='1'):
+	def __init__(self, constraints, ranking=None, name='1'):
 		self.constraints = constraints
 		# Ranking: digraph stored as adjacency list
 		self.c = len(constraints)
-		self.ranking = {constraint:[] for constraint in self.constraints}
-		self.name = name
+		if not ranking:
+			self.ranking = {constraint:[] for constraint in self.constraints}
+		else:
+			self.ranking = ranking
+		self.__name__ = name
 
 	def __str__(self):
-		return self.name
+		return self.__name__
 
 	def randomize_ranking(self):
 		# Fully, randomly rank the constraint set
