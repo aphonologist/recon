@@ -3,7 +3,6 @@
 import random, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
 from language import Language
 from family import Family
-from cosine_similarity import cosine
 
 # Note for later: this is written for artificial data, we'll have to modify this to read actual data from files
 
@@ -46,7 +45,11 @@ lcount = len(languages)
 distances = [[0 for i in range(lcount)] for i in range(lcount)]
 for l1 in range(lcount):
 	for l2 in range(l1, lcount):
-		distances[l1][l2] = cosine(languages[l1], languages[l2])
+		# Normalized vectors have length 1, so cosine similarity is just the dot product
+		cosine = 0.0
+		for i in range(len(v1.normalized_ranking)):
+			sum += v1.normalized_ranking[i] * v2.normalized_ranking[i]
+		distances[l1][l2] = cosine
 
 # Cluster!
 npdistances = numpy.array(distances)
