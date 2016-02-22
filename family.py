@@ -3,8 +3,7 @@ from language import Language
 
 class Family:
 	def __init__(self, rootlang):
-		self.root = rootlang
-		self.languages = {self.root:[]}
+		self.languages = {rootlang:[]}
 
 	def evolve(self, l, p):
 		while self.count_leaves() < l:
@@ -37,5 +36,4 @@ class Family:
 		for language in self.languages:
 			if not self.languages[language]:
 				leaves.append(language)
-		return leaves
-		
+		return sorted(leaves, key=lambda language: language.__name__)
