@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-import random, sys, numpy
+import random, sys, numpy as np
 from language import Language
 from family import Family
-from cosine_similarty import cosine
+from cosine_similarity import cosine
 
 # Note for later: this is written for artificial data, we'll have to modify this to read actual data from files
 
@@ -40,3 +40,12 @@ languages = family.get_leaves()
 # Normalize ranking vectors in languages
 for language in languages:
 	language.normalize_ranking()
+
+# Calculate the distance between languages
+lcount = len(languages)
+distances = np.array([[0 for i in range(lcount)] for i in range(lcount)])
+print(distances)
+for l1 in range(lcount):
+	for l2 in range(l1, lcount):
+		distances[l1, l2] = cosine(languages[l1], languages[l2])
+print(distances)
