@@ -121,4 +121,12 @@ for nn in range(n):
 	averecall += recall / n
 	avefscore += fscore / n
 
+for gl in goldlabeled:
+	print(gl)
+
+print()
+
+for tl in testlabeled:
+	print(tl)
+
 print(aveprecision, averecall, avefscore)

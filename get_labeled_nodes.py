@@ -12,4 +12,10 @@ def get_nodes(tree):
 			else:
 				tempnodes.add(str(temp))
 		nodes.append(tempnodes)
-	return nodes
+	# remove any duplicates from list
+	# duplicates come from branches like L-L-L-L-...-L with only one child
+	outnodes = []
+	for node in nodes:
+		if node not in outnodes:
+			outnodes.append(node)
+	return outnodes
