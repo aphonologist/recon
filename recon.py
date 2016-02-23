@@ -26,6 +26,13 @@ if '-p' in args:
 	p = float(args[args.index('-p') + 1])
 if '-n' in args:
 	n = int(args[args.index('-n') + 1])
+# Help
+if '-h' in args:
+	print('-c number of constraints; default = 10')
+	print('-l maximum number of languages; default = 25')
+	print('-p probability that a language will be copied; default = .001')
+	print('-n number of iterations of experiment; default = 100')
+	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
 constraints = [x for x in range(1, c + 1)]
