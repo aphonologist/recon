@@ -13,6 +13,8 @@ c = 10
 l = 25
 # Default probability that a language will be copied -p
 p = .001
+# Default number of iterations -n
+n = 100
 
 # Overwrite defaults with values from command line
 args = sys.argv[1:]
@@ -22,82 +24,94 @@ if '-l' in args:
 	l = int(args[args.index('-l') + 1])
 if '-p' in args:
 	p = float(args[args.index('-p') + 1])
+if '-n' in args:
+	n = int(args[args.index('-n') + 1])
 
 # Generate the constraint set - ints in [1,c]
 constraints = [x for x in range(1, c + 1)]
 
-# Generate random language to use as root for family
-randomroot = Language(constraints)
-randomroot.randomize_ranking()
+aveprecision = 0.0
+averecall = 0.0
+avefscore = 0.0
 
-# Initialize family
-family = Family(randomroot)
+for nn in range(n):
 
-# Evolve family
-family.evolve(l,p)
-languages = family.get_leaves()
-languagenames = []
-for language in languages:
-	languagenames.append(int(language.__name__))
-languagenames.sort()
+	# Generate random language to use as root for family
+	randomroot = Language(constraints)
+	randomroot.randomize_ranking()
 
-# Normalize ranking vectors in languages
-for language in languages:
-	language.normalize_ranking()
+	# Initialize family
+	family = Family(randomroot)
 
-# Calculate the distance between languages
-lcount = len(languages)
-distances = [[0 for i in range(lcount)] for i in range(lcount)]
-for l1 in range(lcount):
-	for l2 in range(l1, lcount):
-		# Normalized vectors have length 1, so cosine similarity is just the dot product
-		cosine = 0.0
-		for i in range(len(languages[l1].normalized_ranking)):
-			cosine += languages[l1].normalized_ranking[i] * languages[l2].normalized_ranking[i]
-		distances[l1][l2] = cosine
+	# Evolve family
+	family.evolve(l,p)
+	languages = family.get_leaves()
+	languagenames = []
+	for language in languages:
+		languagenames.append(int(language.__name__))
+	languagenames.sort()
 
-# Cluster!
-npdistances = numpy.array(distances)
-thecluster = fastcluster.linkage(npdistances, method='single')
-dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
-plt.savefig('temp.png')
+	# Normalize ranking vectors in languages
+	for language in languages:
+		language.normalize_ranking()
 
-# Get labeled nodes from gold tree
-goldlabeled = get_nodes(family.languages)
+	# Calculate the distance between languages
+	lcount = len(languages)
+	distances = [[0 for i in range(lcount)] for i in range(lcount)]
+	for l1 in range(lcount):
+		for l2 in range(l1, lcount):
+			# Normalized vectors have length 1, so cosine similarity is just the dot product
+			cosine = 0.0
+			for i in range(len(languages[l1].normalized_ranking)):
+				cosine += languages[l1].normalized_ranking[i] * languages[l2].normalized_ranking[i]
+			distances[l1][l2] = cosine
 
-# Parse cluster results into a tree
-num = len(thecluster)
-testfamily = {}
-mapping = {}
-for i in range(len(thecluster)):
-	thisNode = 'A' + str(num + i + 1)
-	line = thecluster[i]
-	if int(line[0]) <= num:
-		x = int(languagenames[int(line[0])])
-	else:
-		x = 'A' + str(int(line[0]))
-	if int(line[1]) <= num:
-		y = int(languagenames[int(line[1])])
-	else:
-		y = 'A' + str(int(line[1]))
-	testfamily[thisNode] = [x,y]
-	if x not in testfamily:
-		testfamily[x] = []
-	if y not in testfamily:
-		testfamily[y] = []
+	# Cluster!
+	npdistances = numpy.array(distances)
+	thecluster = fastcluster.linkage(npdistances, method='single')
+	dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
+	plt.savefig('temp.png')
 
-# Get labeled nodes from test tree
-testlabeled = get_nodes(testfamily)
+	# Get labeled nodes from gold tree
+	goldlabeled = get_nodes(family.languages)
 
-##to add: flat tree baseline, random binary tree baseline
+	# Parse cluster results into a tree
+	num = len(thecluster)
+	testfamily = {}
+	mapping = {}
+	for i in range(len(thecluster)):
+		thisNode = 'A' + str(num + i + 1)
+		line = thecluster[i]
+		if int(line[0]) <= num:
+			x = int(languagenames[int(line[0])])
+		else:
+			x = 'A' + str(int(line[0]))
+		if int(line[1]) <= num:
+			y = int(languagenames[int(line[1])])
+		else:
+			y = 'A' + str(int(line[1]))
+		testfamily[thisNode] = [x,y]
+		if x not in testfamily:
+			testfamily[x] = []
+		if y not in testfamily:
+			testfamily[y] = []
 
-# Evaluate
-numbersharednodes = 0.0
-for node in goldlabeled:
-	if node in testlabeled:
-		numbersharednodes += 1
-precision = numbersharednodes / len(testlabeled)
-recall = numbersharednodes / len(goldlabeled)
-fscore = 2 * precision * recall / (precision + recall)
+	# Get labeled nodes from test tree
+	testlabeled = get_nodes(testfamily)
 
-print(precision, recall, fscore)
+	##to add: flat tree baseline, random binary tree baseline
+
+	# Evaluate
+	numbersharednodes = 0.0
+	for node in goldlabeled:
+		if node in testlabeled:
+			numbersharednodes += 1
+	precision = numbersharednodes / len(testlabeled)
+	recall = numbersharednodes / len(goldlabeled)
+	fscore = 2 * precision * recall / (precision + recall)
+
+	aveprecision += precision / n
+	averecall += recall / n
+	avefscore += fscore / n
+
+print(aveprecision, averecall, avefscore)
