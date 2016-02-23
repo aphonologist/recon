@@ -52,6 +52,7 @@ for nn in range(n):
 
 	# Evolve family
 	family.evolve(l,p)
+	languages = []
 	languages = family.get_leaves()
 	languagenames = []
 	for language in languages:
@@ -78,6 +79,7 @@ for nn in range(n):
 	thecluster = fastcluster.linkage(npdistances, method='single')
 	dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
 	plt.savefig('temp.png')
+	plt.cla()
 
 	# Get labeled nodes from gold tree
 	goldlabeled = get_nodes(family.languages)
