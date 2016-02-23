@@ -43,6 +43,10 @@ avefscore = 0.0
 
 for nn in range(n):
 
+	# Report every n/10 times for boredom reasons
+	if nn % 10 == 0:
+		print(nn, 'iterations run...')
+
 	# Generate random language to use as root for family
 	randomroot = Language(constraints)
 	randomroot.randomize_ranking()
