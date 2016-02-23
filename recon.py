@@ -77,9 +77,10 @@ for nn in range(n):
 	# Cluster!
 	npdistances = numpy.array(distances)
 	thecluster = fastcluster.linkage(npdistances, method='single')
-	dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
-	plt.savefig('temp.png')
-	plt.cla()
+	# Output the cluster as a png
+	# dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
+	# plt.savefig('temp.png')
+	# plt.cla()
 
 	# Get labeled nodes from gold tree
 	goldlabeled = get_nodes(family.languages)
@@ -122,13 +123,5 @@ for nn in range(n):
 	aveprecision += precision / n
 	averecall += recall / n
 	avefscore += fscore / n
-
-for gl in goldlabeled:
-	print(gl)
-
-print()
-
-for tl in testlabeled:
-	print(tl)
 
 print(aveprecision, averecall, avefscore)
