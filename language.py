@@ -41,6 +41,8 @@ class Language:
 		for p in pairwise_ranking:
 			self.length += p**2
 		self.length **= .5
+		if self.length == 0.0:
+			self.length = 1.0
 		# Divide each entry in pairwise vector by the length of the vector
 		self.normalized_ranking = [p/self.length for p in pairwise_ranking]
 
