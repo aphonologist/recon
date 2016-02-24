@@ -80,7 +80,13 @@ for nn in range(n):
 
 	# Cluster!
 	npdistances = numpy.array(distances)
-	thecluster = fastcluster.linkage(npdistances, method='average')
+	thecluster = fastcluster.linkage(npdistances, method='weighted')
+	# Initial f-scoress for the methods (default settings)
+	# single	0.602
+	# complete	0.604
+	# average	0.602
+	# weighted	0.604
+
 	# Output the cluster as a png
 	# dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
 	# plt.savefig('temp.png')
