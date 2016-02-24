@@ -37,9 +37,10 @@ if '-h' in args:
 # Generate the constraint set - ints in [1,c]
 constraints = [x for x in range(1, c + 1)]
 
-aveprecision = 0.0
-averecall = 0.0
-avefscore = 0.0
+# Flat tree, random tree, test tree
+aveprecision = [0.0, 0.0, 0.0]
+averecall = 0.0 #####
+avefscore = 0.0 #####
 
 for nn in range(n):
 
@@ -119,7 +120,12 @@ for nn in range(n):
 	# Get labeled nodes from test tree
 	testlabeled = get_nodes(testfamily)
 
-	##to add: flat tree baseline, random binary tree baseline
+	# Null hypothesis baseline: flat tree
+	flatbaseline = [set([languagenames])]
+	# update reported numbers
+
+	# Better baseline: random binary tree
+	# to do :)
 
 	# Evaluate
 	numbersharednodes = 0.0
