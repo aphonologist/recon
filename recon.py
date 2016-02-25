@@ -130,15 +130,14 @@ for nn in range(n):
 	while rblstack:
 		rbltemp = rblstack.pop()
 		randombaseline.append(rbltemp)
-		if rbltemp:
-			if len(rbltemp) > 1:
-				randomsplit = random.randint(1, len(rbltemp) - 2)
-				split1 = copy.deepcopy(rbltemp)
-				split2 = set([])
-				for rbli in range(randomsplit):
-					split2.add(split1.pop())
-				rblstack.append(split1)
-				rblstack.append(split2)
+		if len(rbltemp) > 1:
+			randomsplit = random.randint(1, len(rbltemp) - 1)
+			split1 = copy.deepcopy(rbltemp)
+			split2 = set([])
+			for rbli in range(randomsplit):
+				split2.add(split1.pop())
+			rblstack.append(split1)
+			rblstack.append(split2)
 
 	# Evaluate
 	# Flat tree, random tree, test tree
