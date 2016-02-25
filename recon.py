@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import random, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
+import random, copy, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
 from language import Language
 from family import Family
 from get_labeled_nodes import get_nodes
@@ -39,8 +39,8 @@ constraints = [x for x in range(1, c + 1)]
 
 # Flat tree, random tree, test tree
 aveprecision = [0.0, 0.0, 0.0]
-averecall = 0.0 #####
-avefscore = 0.0 #####
+averecall = [0.0, 0.0, 0.0]
+avefscore = [0.0, 0.0, 0.0]
 
 for nn in range(n):
 
@@ -120,14 +120,19 @@ for nn in range(n):
 	# Get labeled nodes from test tree
 	testlabeled = get_nodes(testfamily)
 
-	# Null hypothesis baseline: flat tree
-	flatbaseline = [set([languagenames])]
-	# update reported numbers
+	# Generate null hypothesis baseline: flat tree
+	flatbaseline = [set(languagenames)]
 
-	# Better baseline: random binary tree
-	# to do :)
+	# Generate random baseline: random binary tree
+	randombaseline = []
+	rblstack = [set(languagenames)]
+	while rblstack:
+		rbltemp = rblstack.pop()
+		randombaseline.append(rbltemp)
+		if len(rbltemp) > 1
 
 	# Evaluate
+	# Flat tree, random tree, test tree
 	numbersharednodes = 0.0
 	for node in goldlabeled:
 		if node in testlabeled:
