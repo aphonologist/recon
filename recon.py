@@ -161,6 +161,9 @@ for nn in range(n):
 	avefscore[2] += testeval [2] / n
 
 # Print results to screen
+aveprecision = [round(x,3) for x in aveprecision]
+averecall = [round(x,3) for x in averecall]
+avefscore = [round(x,3) for x in avefscore]
 out = [c, l, p, n] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))
 
