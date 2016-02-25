@@ -13,7 +13,7 @@ class Family:
 				if r <= p:
 					# Copy the language
 					newrank = copy.deepcopy(language.ranking)
-					newname = str(len(self.languages) + 1)
+					newname = str(len(self.languages) + int(language.__name__) + 1)
 					newlanguage = Language(language.constraints, newrank, newname)
 					self.languages[language].append(newlanguage)
 					newlanguages.append(newlanguage)
@@ -23,7 +23,7 @@ class Family:
 						language.tweak_ranking()
 			for newlanguage in newlanguages:
 				self.languages[newlanguage] = []
-	
+
 	def count_leaves(self):
 		count = 0
 		for language in self.languages:
