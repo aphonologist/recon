@@ -43,6 +43,10 @@ aveprecision = [0.0, 0.0, 0.0]
 averecall = [0.0, 0.0, 0.0]
 avefscore = [0.0, 0.0, 0.0]
 
+# Output header
+print('\t'.join(['c', 'l', 'p', 'n', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
+
+# Run the experiment
 for nn in range(n):
 
 	# Report every n/10 times for boredom reasons
@@ -122,11 +126,11 @@ for nn in range(n):
 	testlabeled = get_nodes(testfamily)
 
 	# Generate null hypothesis baseline: flat tree
-	flatbaseline = [set(languagenames)]
+	flatbaseline = [set([str(x) for x in languagenames])]
 
 	# Generate random baseline: random binary tree
 	randombaseline = []
-	rblstack = [set(languagenames)]
+	rblstack = [set([str(x) for x in languagenames])]
 	while rblstack:
 		rbltemp = rblstack.pop()
 		randombaseline.append(rbltemp)
@@ -142,18 +146,21 @@ for nn in range(n):
 	# Evaluate
 	# Flat tree, random tree, test tree
 	flateval = eval(goldlabeled, flatbaseline)
-	aveprecision[0] += flateval[0]
-	averecall[0] += flateval[1]
-	avefscore[0] += flateval [2]
+	aveprecision[0] += flateval[0] / n
+	averecall[0] += flateval[1] / n
+	avefscore[0] += flateval [2] / n
 
 	randomeval = eval(goldlabeled, randombaseline)
-	aveprecision[1] += randomeval[0]
-	averecall[1] += randomeval[1]
-	avefscore[1] += randomeval [2]
+	aveprecision[1] += randomeval[0] / n
+	averecall[1] += randomeval[1] / n
+	avefscore[1] += randomeval [2] / n
 	
 	testeval = eval(goldlabeled, testlabeled)
-	aveprecision[2] += testeval[0]
-	averecall[2] += testeval[1]
-	avefscore[2] += testeval [2]
+	aveprecision[2] += testeval[0] / n
+	averecall[2] += testeval[1] / n
+	avefscore[2] += testeval [2] / n
 
-print(c, l, p, n, aveprecision, averecall, avefscore)
+# Print results to screen
+out = [c, l, p, n] + aveprecision + averecall + avefscore
+print('\t'.join([str(x) for x in out]))
+
