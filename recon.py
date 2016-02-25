@@ -16,6 +16,8 @@ l = 25
 p = .001
 # Default number of iterations -n
 n = 100
+# Default number of families -f
+f = 1
 
 # Overwrite defaults with values from command line
 args = sys.argv[1:]
@@ -27,12 +29,15 @@ if '-p' in args:
 	p = float(args[args.index('-p') + 1])
 if '-n' in args:
 	n = int(args[args.index('-n') + 1])
+if '-f' in args:
+	f = int(args[args.index('-f') + 1])
 # Help
 if '-h' in args:
 	print('-c number of constraints; default = 10')
 	print('-l maximum number of languages; default = 25')
 	print('-p probability that a language will be copied; default = .001')
 	print('-n number of iterations of experiment; default = 100')
+	print('-f number of families in experiment; default = 1')
 	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
@@ -44,7 +49,7 @@ averecall = [0.0, 0.0, 0.0]
 avefscore = [0.0, 0.0, 0.0]
 
 # Output header
-print('\t'.join(['c', 'l', 'p', 'n', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
+print('\t'.join(['c', 'l', 'p', 'n', 'f', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
 
 # Run the experiment
 for nn in range(n):
@@ -53,17 +58,21 @@ for nn in range(n):
 	if nn % 10 == 0:
 		print(nn, 'iterations run...')
 
-	# Generate random language to use as root for family
-	randomroot = Language(constraints)
-	randomroot.randomize_ranking()
+	# Initialize families
+	families = []
 
-	# Initialize family
-	family = Family(randomroot)
+	for ff in range(f):
+		# Generate random language to use as root for family
+		randomroot = Language(constraints, name=str(1000 * ff))
+		randomroot.randomize_ranking()
+		families.append(Family(randomroot))
 
 	# Evolve family
-	family.evolve(l,p)
+	for family in families:
+		family.evolve(l,p)
 	languages = []
-	languages = family.get_leaves()
+	for family in families:
+		languages += family.get_leaves()
 	languagenames = []
 	for language in languages:
 		languagenames.append(int(language.__name__))
@@ -90,12 +99,15 @@ for nn in range(n):
 	# Using average as default; options: single, complete, average, weighted
 
 	# Output the cluster as a png
-	# dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
-	# plt.savefig('temp.png')
-	# plt.cla()
+#	dendrogram = scipy.cluster.hierarchy.dendrogram(thecluster, labels=languagenames)
+#	plt.savefig('temp.png')
+#	plt.cla()
 
 	# Get labeled nodes from gold tree
-	goldlabeled = get_nodes(family.languages)
+	goldlabeled = []
+	for family in families:
+		goldlabeled += get_nodes(family.languages)
+	goldlabeled.append(set(languagenames))
 
 	# Parse cluster results into a tree
 	num = len(thecluster)
@@ -122,7 +134,7 @@ for nn in range(n):
 	testlabeled = get_nodes(testfamily)
 
 	# Generate null hypothesis baseline: flat tree
-	flatbaseline = [set([str(x) for x in languagenames])]
+	flatbaseline = [set(languagenames)]
 
 	# Generate random baseline: random binary tree
 	randombaseline = []
@@ -166,5 +178,5 @@ for nn in range(n):
 aveprecision = [round(x,3) for x in aveprecision]
 averecall = [round(x,3) for x in averecall]
 avefscore = [round(x,3) for x in avefscore]
-out = [c, l, p, n] + aveprecision + averecall + avefscore
+out = [c, l, p, n, f] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))
