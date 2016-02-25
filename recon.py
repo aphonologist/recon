@@ -139,6 +139,12 @@ for nn in range(n):
 			rblstack.append(split1)
 			rblstack.append(split2)
 
+	# In a binary tree, half the nodes are leaf nodes; for evaluation, we may only want internal nodes
+#	goldlabeled = [x for x in goldlabeled if len(x) > 1]
+#	testlabeled = [x for x in testlabeled if len(x) > 1]
+#	flatbaseline = [x for x in flatbaseline if len(x) > 1]
+#	randombaseline = [x for x in randombaseline if len(x) > 1]
+
 	# Evaluate
 	# Flat tree, random tree, test tree
 	flateval = eval(goldlabeled, flatbaseline)
@@ -162,4 +168,3 @@ averecall = [round(x,3) for x in averecall]
 avefscore = [round(x,3) for x in avefscore]
 out = [c, l, p, n] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))
-
