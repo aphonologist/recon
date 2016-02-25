@@ -4,6 +4,7 @@ import random, copy, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotli
 from language import Language
 from family import Family
 from get_labeled_nodes import get_nodes
+from evaluation import eval
 
 # Note for later: this is written for artificial data, we'll have to modify this to read actual data from files
 
@@ -140,6 +141,19 @@ for nn in range(n):
 
 	# Evaluate
 	# Flat tree, random tree, test tree
-	
+	flateval = eval(goldlabeled, flatbaseline)
+	aveprecision[0] += flateval[0]
+	averecall[0] += flateval[1]
+	avefscore[0] += flateval [2]
 
-print(aveprecision, averecall, avefscore)
+	randomeval = eval(goldlabeled, randombaseline)
+	aveprecision[1] += randomeval[0]
+	averecall[1] += randomeval[1]
+	avefscore[1] += randomeval [2]
+	
+	testeval = eval(goldlabeled, testlabeled)
+	aveprecision[2] += testeval[0]
+	averecall[2] += testeval[1]
+	avefscore[2] += testeval [2]
+
+print(c, l, p, n, aveprecision, averecall, avefscore)
