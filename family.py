@@ -36,4 +36,4 @@ class Family:
 		for language in self.languages:
 			if not self.languages[language]:
 				leaves.append(language)
-		return sorted(leaves, key=lambda language: language.__name__)
+		return leaves
