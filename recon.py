@@ -129,20 +129,17 @@ for nn in range(n):
 	while rblstack:
 		rbltemp = rblstack.pop()
 		randombaseline.append(rbltemp)
-		if len(rbltemp) > 1
+		if len(rbltemp) > 1:
+			randomsplit = random.randint(1, len(rbltemp) - 2)
+			split1 = copy.deepcopy(rbltemp)
+			split2 = set([])
+			for rbli in range(randomsplit):
+				split2.add(split1.pop())
+			rblstack.append(split1)
+			rblstack.append(split2)
 
 	# Evaluate
 	# Flat tree, random tree, test tree
-	numbersharednodes = 0.0
-	for node in goldlabeled:
-		if node in testlabeled:
-			numbersharednodes += 1
-	precision = numbersharednodes / len(testlabeled)
-	recall = numbersharednodes / len(goldlabeled)
-	fscore = 2 * precision * recall / (precision + recall)
-
-	aveprecision += precision / n
-	averecall += recall / n
-	avefscore += fscore / n
+	
 
 print(aveprecision, averecall, avefscore)
