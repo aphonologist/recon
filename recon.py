@@ -41,7 +41,7 @@ if '-h' in args:
 	print('-l maximum number of languages; default = 25')
 	print('-p probability that a language will be copied; default = .001')
 	print('-n number of iterations of experiment; default = 100')
-	print('e evaluation metric; c = cosine similarity, e = euclidean distance, a = addition')
+	print('-e evaluation metric; c = cosine similarity, e = euclidean distance, a = addition')
 	print('-f number of families in experiment; default = 1')
 	sys.exit()
 
