@@ -38,3 +38,13 @@ class Family:
 			if not self.languages[language]:
 				leaves.append(language)
 		return leaves
+
+	def tree_to_dot(self, name='temp_tree'):
+		out = 'digraph family {\n'
+		for l1 in self.languages:
+			for l2 in self.languages[l1]:
+				out += '\t' + l1.__name__ + '->' + l2.__name__ + ';\n'
+		out += '}'
+		f = open(name+'.dot', 'w')
+		f.write(out)
+		f.close()
