@@ -13,13 +13,16 @@ c = 10
 # Default maximum number of languages -l
 l = 25
 # Default probability that a language will be copied -p
-p = .001
+p = .1
 # Default number of iterations -n
 n = 100
 # Default evaluation metric -e
 e = 'a'
 # Default number of families -f
 f = 1
+# Default cluster method -m
+m = 'average'
+clustermethod = {'s':'single', 'c':'complete', 'a':'average', 'w':'weighted'}
 
 # Overwrite defaults with values from command line
 args = sys.argv[1:]
@@ -35,14 +38,18 @@ if '-e' in args:
 	e = args[args.index('-e') + 1]
 if '-f' in args:
 	f = int(args[args.index('-f') + 1])
+if '-m' in args:
+	m = clustermethod[args[args.index('-m') + 1]]
+
 # Help
 if '-h' in args:
 	print('-c number of constraints; default = 10')
 	print('-l maximum number of languages; default = 25')
-	print('-p probability that a language will be copied; default = .001')
+	print('-p probability that a language will be copied; default = .1')
 	print('-n number of iterations of experiment; default = 100')
 	print('-e evaluation metric; c = cosine similarity, e = euclidean distance, a = addition')
 	print('-f number of families in experiment; default = 1')
+	print('-m cluster method; s = single; c = complete; a = average; w = weighted')
 	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
@@ -134,7 +141,7 @@ for nn in range(n):
 
 	# Cluster!
 	npdistances = numpy.array(distances)
-	thecluster = fastcluster.linkage(npdistances, method='average')
+	thecluster = fastcluster.linkage(npdistances, method=m)
 	# Using average as default; options: single, complete, average, weighted
 
 	# Output the cluster as a png
