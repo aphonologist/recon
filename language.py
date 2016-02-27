@@ -32,10 +32,12 @@ class Language:
 		numcons = len(sorted_constraints)
 		for c1 in range(numcons):
 			for c2 in range(c1, numcons):
-				self.pairwise_ranking.append(self.search_rank(sorted_constraints[c1], sorted_constraints[c2]))
+				rank = self.search_rank(sorted_constraints[c1], sorted_constraints[c2])
+				if rank == 0:
+					rank = 0 - self.search_rank(sorted_constraints[c2], sorted_constraints[c1])
+				self.pairwise_ranking.append(rank)
 
 	def search_rank(self, c1, c2):
-		# Recursively search for c2 in c1's subtree
 		if self.ranking[c1]:
 			if c2 in self.ranking[c1]:
 				# c1 >> c2
@@ -44,17 +46,7 @@ class Language:
 				for c in self.ranking[c1]:
 					return self.search_rank(c, c2)
 		else:
-			# Search for c1 in c2's subtree
-			if self.ranking[c2]:
-				if c1 in self.ranking[c2]:
-					# c2 >> c1
-					return -1
-				else:
-					for c in self.ranking[c2]:
-						return self.search_rank(c, c1)
-			else:
-				# No relation
-				return 0
+			return 0
 
 	def normalize_ranking(self):
 		sorted_constraints = sorted(self.constraints)
@@ -85,33 +77,6 @@ class Language:
 			if r1 != r2: # constraints cannot dominate themselves
 				con1 = self.constraints[r1]
 				con2 = self.constraints[r2]
-				if con2 not in self.ranking[con1]:
-					# make sure the new link would not result in a loop
-					tempranking = copy.deepcopy(self.ranking)
-					tempranking[con1].append(con2)
-					if not self.check_for_loops(tempranking):
-						self.ranking[con1].append(con2)
-
-	def check_for_loops(self,G):
-		# checks a graph for loops; returns True if a loop is found, else False
-		color = {u:'white' for u in G}
-		found_cycle = False
-		for u in G:
-			if color[u] == 'white':
-				self.dfs_visit(G, u, color, found_cycle)
-			if found_cycle:
-				break
-		return found_cycle
-	
-	def dfs_visit(self, G, u, color, found_cycle):
-		# helper function for check_for_loops
-		if found_cycle:
-			return
-		color[u] = 'gray'
-		for v in G[u]:
-			if color[v] == 'gray':
-				found_cycle = True
-				return
-			if color[v] == 'white':
-				self.dfs_visit(G, v, color, found_cycle)
-		color[u] = 'black'
+				if self.search_rank(con2, con1) == 0:
+					# make sure this will not create a loop
+					self.ranking[con1].append(con2)
