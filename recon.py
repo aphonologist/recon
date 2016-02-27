@@ -17,7 +17,7 @@ p = .001
 # Default number of iterations -n
 n = 100
 # Default evaluation metric -e
-e = 'c'
+e = 'a'
 # Default number of families -f
 f = 1
 
