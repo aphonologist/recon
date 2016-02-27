@@ -11,19 +11,20 @@ class Family:
 			for language in self.languages:
 				r = random.random()
 				if r <= p:
-					# Copy the language
-					newrank = copy.deepcopy(language.ranking)
-					newname = str(len(self.languages) + 1)
-					newlanguage = Language(language.constraints, newrank, newname)
-					self.languages[language].append(newlanguage)
-					newlanguages.append(newlanguage)
+					# Copy the language but be a binary tree
+					if len(self.languages[language]) < 2:
+						newrank = copy.deepcopy(language.ranking)
+						newname = str(len(self.languages) + int(language.__name__) + 1)
+						newlanguage = Language(language.constraints, newrank, newname)
+						self.languages[language].append(newlanguage)
+						newlanguages.append(newlanguage)
 				else:
 					# Change the language if it does not have any children
 					if not self.languages[language]:
 						language.tweak_ranking()
 			for newlanguage in newlanguages:
 				self.languages[newlanguage] = []
-	
+
 	def count_leaves(self):
 		count = 0
 		for language in self.languages:
