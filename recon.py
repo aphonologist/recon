@@ -40,6 +40,7 @@ if '-f' in args:
 	f = int(args[args.index('-f') + 1])
 if '-m' in args:
 	m = clustermethod[args[args.index('-m') + 1]]
+mute = '-mute' in args
 
 # Help
 if '-h' in args:
@@ -50,6 +51,7 @@ if '-h' in args:
 	print('-e evaluation metric; c = cosine similarity, e = euclidean distance, a = addition')
 	print('-f number of families in experiment; default = 1')
 	print('-m cluster method; s = single; c = complete; a = average; w = weighted')
+	print('-mute : supress status messages')
 	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
@@ -66,9 +68,10 @@ print('\t'.join(['c', 'l', 'p', 'n', 'f', 'e', 'Precision - flat', 'Precision - 
 # Run the experiment
 for nn in range(n):
 
-	# Report every n/10 times for boredom reasons
-	if nn % 10 == 0:
-		print(nn, 'iterations run...')
+	if not mute:
+		# Report every n/10 times for boredom reasons
+		if nn % 10 == 0:
+			print(nn, 'iterations run...')
 
 	# Initialize families
 	families = []
