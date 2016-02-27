@@ -31,22 +31,22 @@ class Language:
 		sorted_constraints = sorted(self.constraints)
 		numcons = len(sorted_constraints)
 		for c1 in range(numcons):
-			for c2 in range(c1 + 1, numcons):
+			for c2 in range(c1, numcons):
 				rank = self.search_rank(sorted_constraints[c1], sorted_constraints[c2])
 				if rank == 0:
 					rank = 0 - self.search_rank(sorted_constraints[c2], sorted_constraints[c1])
 				self.pairwise_ranking.append(rank)
 
 	def search_rank(self, c1, c2):
-		if self.ranking[c1]:
-			if c2 in self.ranking[c1]:
-				# c1 >> c2
-				return 1
-			else:
-				for c3 in self.ranking[c1]:
-					return self.search_rank(c3, c2)
-		else:
+		if not self.ranking[c1]:
 			return 0
+		if c2 in self.ranking[c1]:
+			return 1
+		else:
+			for c3 in self.ranking[c1]:
+				if self.search_rank(c3, c2) == 1:
+					return 1
+		return 0
 
 	def normalize_ranking(self):
 		sorted_constraints = sorted(self.constraints)
