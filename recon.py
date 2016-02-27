@@ -16,6 +16,8 @@ l = 25
 p = .001
 # Default number of iterations -n
 n = 100
+# Default evaluation metric -e
+e = 'c'
 
 # Overwrite defaults with values from command line
 args = sys.argv[1:]
@@ -27,12 +29,15 @@ if '-p' in args:
 	p = float(args[args.index('-p') + 1])
 if '-n' in args:
 	n = int(args[args.index('-n') + 1])
+if '-e' in args:
+	e = args[args.index('-e') + 1]
 # Help
 if '-h' in args:
 	print('-c number of constraints; default = 10')
 	print('-l maximum number of languages; default = 25')
 	print('-p probability that a language will be copied; default = .001')
 	print('-n number of iterations of experiment; default = 100')
+	print('e evaluation metric; c = cosine similarity, e = euclidean distance')
 	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
@@ -44,7 +49,7 @@ averecall = [0.0, 0.0, 0.0]
 avefscore = [0.0, 0.0, 0.0]
 
 # Output header
-print('\t'.join(['c', 'l', 'p', 'n', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
+print('\t'.join(['c', 'l', 'p', 'n', 'e', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
 
 # Run the experiment
 for nn in range(n):
@@ -69,21 +74,39 @@ for nn in range(n):
 		languagenames.append(int(language.__name__))
 	languagenames.sort()
 
-	# Normalize ranking vectors in languages
-	for language in languages:
-		language.normalize_ranking()
-
-	# Calculate the distance between languages
-	lcount = len(languages)
+	# Calculate inter-language distances
 	distances = [[0 for i in range(lcount)] for i in range(lcount)]
-	for l1 in range(lcount):
-		for l2 in range(l1, lcount):
-			# Normalized vectors have length 1, so cosine similarity is just the dot product
-			cosine = 0.0
-			for i in range(len(languages[l1].normalized_ranking)):
-				cosine += languages[l1].normalized_ranking[i] * languages[l2].normalized_ranking[i]
-			distances[l1][l2] = cosine
+	lcount = len(languages)
 
+	if e == 'c':
+		# Cosine Similarity
+
+		# Normalize ranking vectors in languages
+		for language in languages:
+			language.normalize_ranking()
+
+		# Calculate the distance between languages
+		for l1 in range(lcount):
+			for l2 in range(l1, lcount):
+				# Normalized vectors have length 1, so cosine similarity is just the dot product
+				cosine = 0.0
+				for i in range(len(languages[l1].normalized_ranking)):
+					cosine += languages[l1].normalized_ranking[i] * languages[l2].normalized_ranking[i]
+				distances[l1][l2] = cosine
+	elif e == 'e':
+		# Euclidean Distance
+	
+		# Get the pairwise comparison vectors
+		for language in languages:
+			language.get_pairwise()
+
+		# Calculate Euclidean distance between languages
+		for l1 in range(lcount):
+			for l2 in range(l1,lcount):
+				euc = 0.0
+				for i in range(len(languages[l1].pairwise_ranking)):
+					euc += (languages[l1].pairwise_ranking[i] - languages[l2].pairwise_ranking[i]) ** 2
+				distances[l1][l2] = euc ** .5
 	# Cluster!
 	npdistances = numpy.array(distances)
 	thecluster = fastcluster.linkage(npdistances, method='average')
@@ -166,5 +189,5 @@ for nn in range(n):
 aveprecision = [round(x,3) for x in aveprecision]
 averecall = [round(x,3) for x in averecall]
 avefscore = [round(x,3) for x in avefscore]
-out = [c, l, p, n] + aveprecision + averecall + avefscore
+out = [c, l, p, n, e] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))

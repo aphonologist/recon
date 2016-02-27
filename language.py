@@ -25,26 +25,29 @@ class Language:
 		for i in range(self.c - 1):
 			self.ranking[self.constraints[i]].append(self.constraints[i+1])
 
-	def normalize_ranking(self):
-		sorted_constraints = sorted(self.constraints)
+	def get_pairwise(self):
 		# Get pairwise comparison vector; 1 if a >> b, -1 if b >> a, 0 if no relation
-		pairwise_ranking = []
+		self.pairwise_ranking = []
 		for con1 in sorted_constraints:
 			for con2 in sorted_constraints:
 				if con2 in self.ranking[con1]:
-					pairwise_ranking.append(1.0)
+					self.pairwise_ranking.append(1.0)
 				elif con1 in self.ranking[con2]:
-					pairwise_ranking.append(-1.0)
+					self.pairwise_ranking.append(-1.0)
 				else:
-					pairwise_ranking.append(0.0)
+					self.pairwise_ranking.append(0.0)
+
+	def normalize_ranking(self):
+		sorted_constraints = sorted(self.constraints)
+		self.get_pairwise()
 		# Get length of vector: square root of sum of squares of values
-		for p in pairwise_ranking:
+		for p in self.pairwise_ranking:
 			self.length += p**2
 		self.length **= .5
 		if self.length == 0.0:
 			self.length = 1.0
 		# Divide each entry in pairwise vector by the length of the vector
-		self.normalized_ranking = [p/self.length for p in pairwise_ranking]
+		self.normalized_ranking = [p/self.length for p in self.pairwise_ranking]
 
 	def tweak_ranking(self):
 		# Randomly modify ranking
