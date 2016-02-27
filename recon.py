@@ -41,7 +41,7 @@ if '-h' in args:
 	print('-l maximum number of languages; default = 25')
 	print('-p probability that a language will be copied; default = .001')
 	print('-n number of iterations of experiment; default = 100')
-	print('e evaluation metric; c = cosine similarity, e = euclidean distance')
+	print('e evaluation metric; c = cosine similarity, e = euclidean distance, a = addition')
 	print('-f number of families in experiment; default = 1')
 	sys.exit()
 
@@ -116,6 +116,22 @@ for nn in range(n):
 				for i in range(len(languages[l1].pairwise_ranking)):
 					euc += (languages[l1].pairwise_ranking[i] - languages[l2].pairwise_ranking[i]) ** 2
 				distances[l1][l2] = euc ** .5
+
+	elif e == 'a':
+		# Simpler distance
+	
+		# Get the pairwise comparison vectors
+		for language in languages:
+			language.get_pairwise()
+
+		# Calculate Euclidean distance between languages
+		for l1 in range(lcount):
+			for l2 in range(l1,lcount):
+				add = 0
+				for i in range(len(languages[l1].pairwise_ranking)):
+					add += languages[l1].pairwise_ranking[i] + languages[l2].pairwise_ranking[i]
+				distances[l1][l2] = add
+
 	# Cluster!
 	npdistances = numpy.array(distances)
 	thecluster = fastcluster.linkage(npdistances, method='average')
