@@ -31,7 +31,7 @@ class Language:
 		sorted_constraints = sorted(self.constraints)
 		numcons = len(sorted_constraints)
 		for c1 in range(numcons):
-			for c2 in range(c1, numcons):
+			for c2 in range(c1 + 1, numcons):
 				rank = self.search_rank(sorted_constraints[c1], sorted_constraints[c2])
 				if rank == 0:
 					rank = 0 - self.search_rank(sorted_constraints[c2], sorted_constraints[c1])
@@ -43,8 +43,8 @@ class Language:
 				# c1 >> c2
 				return 1
 			else:
-				for c in self.ranking[c1]:
-					return self.search_rank(c, c2)
+				for c3 in self.ranking[c1]:
+					return self.search_rank(c3, c2)
 		else:
 			return 0
 
@@ -77,6 +77,6 @@ class Language:
 			if r1 != r2: # constraints cannot dominate themselves
 				con1 = self.constraints[r1]
 				con2 = self.constraints[r2]
-				if self.search_rank(con2, con1) == 0:
+				if self.search_rank(con2, con1) + self.search_rank(con1, con2) == 0:
 					# make sure this will not create a loop
 					self.ranking[con1].append(con2)
