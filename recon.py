@@ -96,7 +96,7 @@ for nn in range(n):
 	for language in languages:
 		languagenames.append(int(language.__name__))
 	languagenames.sort()
-	# Output gold tree as a .dot file; then call dot-png.sh
+	# Output gold tree as a .dot file; then call dot -T png -o [tree].png [tree].dot
 	family.tree_to_dot()
 
 	# Calculate inter-language distances
