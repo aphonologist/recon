@@ -34,7 +34,7 @@ class Language:
 			for c2 in range(c1, numcons):
 				self.pairwise_ranking.append(self.search_rank(sorted_constraints[c1], sorted_constraints[c2]))
 
-	def search_rank(c1, c2):
+	def search_rank(self, c1, c2):
 		# Recursively search for c2 in c1's subtree
 		if self.ranking[c1]:
 			if c2 in self.ranking[c1]:
