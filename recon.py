@@ -16,13 +16,10 @@ l = 25
 p = .001
 # Default number of iterations -n
 n = 100
-<<<<<<< HEAD
 # Default evaluation metric -e
 e = 'c'
-=======
 # Default number of families -f
 f = 1
->>>>>>> bf38ec1513c53d3e51824c2b8fdbc979e899c178
 
 # Overwrite defaults with values from command line
 args = sys.argv[1:]
@@ -34,24 +31,18 @@ if '-p' in args:
 	p = float(args[args.index('-p') + 1])
 if '-n' in args:
 	n = int(args[args.index('-n') + 1])
-<<<<<<< HEAD
 if '-e' in args:
 	e = args[args.index('-e') + 1]
-=======
 if '-f' in args:
 	f = int(args[args.index('-f') + 1])
->>>>>>> bf38ec1513c53d3e51824c2b8fdbc979e899c178
 # Help
 if '-h' in args:
 	print('-c number of constraints; default = 10')
 	print('-l maximum number of languages; default = 25')
 	print('-p probability that a language will be copied; default = .001')
 	print('-n number of iterations of experiment; default = 100')
-<<<<<<< HEAD
 	print('e evaluation metric; c = cosine similarity, e = euclidean distance')
-=======
 	print('-f number of families in experiment; default = 1')
->>>>>>> bf38ec1513c53d3e51824c2b8fdbc979e899c178
 	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
@@ -63,11 +54,7 @@ averecall = [0.0, 0.0, 0.0]
 avefscore = [0.0, 0.0, 0.0]
 
 # Output header
-<<<<<<< HEAD
-print('\t'.join(['c', 'l', 'p', 'n', 'e', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
-=======
-print('\t'.join(['c', 'l', 'p', 'n', 'f', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
->>>>>>> bf38ec1513c53d3e51824c2b8fdbc979e899c178
+print('\t'.join(['c', 'l', 'p', 'n', 'f', 'e', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
 
 # Run the experiment
 for nn in range(n):
@@ -97,8 +84,8 @@ for nn in range(n):
 	languagenames.sort()
 
 	# Calculate inter-language distances
-	distances = [[0 for i in range(lcount)] for i in range(lcount)]
 	lcount = len(languages)
+	distances = [[0 for i in range(lcount)] for i in range(lcount)]
 
 	if e == 'c':
 		# Cosine Similarity
@@ -214,9 +201,5 @@ for nn in range(n):
 aveprecision = [round(x,3) for x in aveprecision]
 averecall = [round(x,3) for x in averecall]
 avefscore = [round(x,3) for x in avefscore]
-<<<<<<< HEAD
-out = [c, l, p, n, e] + aveprecision + averecall + avefscore
-=======
-out = [c, l, p, n, f] + aveprecision + averecall + avefscore
->>>>>>> bf38ec1513c53d3e51824c2b8fdbc979e899c178
+out = [c, l, p, n, f, e] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))
