@@ -41,6 +41,7 @@ if '-f' in args:
 if '-m' in args:
 	m = clustermethod[args[args.index('-m') + 1]]
 mute = '-mute' in args
+noheader = -noheader' in args
 
 # Help
 if '-h' in args:
@@ -51,7 +52,9 @@ if '-h' in args:
 	print('-e evaluation metric; c = cosine similarity, e = euclidean distance, a = addition')
 	print('-f number of families in experiment; default = 1')
 	print('-m cluster method; s = single; c = complete; a = average; w = weighted')
+	print()
 	print('-mute : supress status messages')
+	print('-noheader : supress header message')
 	sys.exit()
 
 # Generate the constraint set - ints in [1,c]
@@ -62,8 +65,9 @@ aveprecision = [0.0, 0.0, 0.0]
 averecall = [0.0, 0.0, 0.0]
 avefscore = [0.0, 0.0, 0.0]
 
-# Output header
-print('\t'.join(['c', 'l', 'p', 'n', 'f', 'e', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
+if not noheader:
+	# Output header
+	print('\t'.join(['c', 'l', 'p', 'n', 'f', 'e', 'm', 'Precision - flat', 'Precision - random', 'Precision - test', 'Recall - flat', 'Recall - random', 'Recall - test', 'F-Score - flat', 'F-Score - random', 'F-Score - test']))
 
 # Run the experiment
 for nn in range(n):
@@ -227,5 +231,5 @@ for nn in range(n):
 aveprecision = [round(x,3) for x in aveprecision]
 averecall = [round(x,3) for x in averecall]
 avefscore = [round(x,3) for x in avefscore]
-out = [c, l, p, n, f, e] + aveprecision + averecall + avefscore
+out = [c, l, p, n, f, e, m] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))
