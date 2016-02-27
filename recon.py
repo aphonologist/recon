@@ -41,7 +41,7 @@ if '-f' in args:
 if '-m' in args:
 	m = clustermethod[args[args.index('-m') + 1]]
 mute = '-mute' in args
-noheader = -noheader' in args
+noheader = '-noheader' in args
 
 # Help
 if '-h' in args:
