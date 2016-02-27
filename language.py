@@ -42,7 +42,7 @@ class Language:
 				return 1
 			else:
 				for c in self.ranking[c1]:
-					return search_rank(c, c2)
+					return self.search_rank(c, c2)
 		else:
 			# Search for c1 in c2's subtree
 			if self.ranking[c2]:
@@ -51,7 +51,7 @@ class Language:
 					return -1
 				else:
 					for c in self.ranking[c2]:
-						return search_rank(c, c1)
+						return self.search_rank(c, c1)
 			else:
 				# No relation
 				return 0
