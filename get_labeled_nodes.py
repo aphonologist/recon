@@ -17,5 +17,6 @@ def get_nodes(tree):
 	outnodes = []
 	for node in nodes:
 		if node not in outnodes:
-			outnodes.append(node)
+			if len(node) > 1:
+				outnodes.append(node)
 	return outnodes
