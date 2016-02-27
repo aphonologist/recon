@@ -29,14 +29,32 @@ class Language:
 		# Get pairwise comparison vector; 1 if a >> b, -1 if b >> a, 0 if no relation
 		self.pairwise_ranking = []
 		sorted_constraints = sorted(self.constraints)
-		for con1 in sorted_constraints:
-			for con2 in sorted_constraints:
-				if con2 in self.ranking[con1]:
-					self.pairwise_ranking.append(1.0)
-				elif con1 in self.ranking[con2]:
-					self.pairwise_ranking.append(-1.0)
+		numcons = len(sorted_constraints)
+		for c1 in range(numcons):
+			for c2 in range(c1, numcons):
+				self.pairwise_ranking.append(search_rank(self.sorted_constraints[c1], self.sorted_constraints[c2]))
+
+	def search_rank(c1, c2):
+		# Recursively search for c2 in c1's subtree
+		if self.ranking[c1]:
+			if c2 in self.ranking[c1]:
+				# c1 >> c2
+				return 1
+			else:
+				for c in self.ranking[c1]:
+					return search_rank(c, c2)
+		else:
+			# Search for c1 in c2's subtree
+			if self.ranking[c2]:
+				if c1 in self.ranking[c2]:
+					# c2 >> c1
+					return -1
 				else:
-					self.pairwise_ranking.append(0.0)
+					for c in self.ranking[c2]:
+						return search_rank(c, c1)
+			else:
+				# No relation
+				return 0
 
 	def normalize_ranking(self):
 		sorted_constraints = sorted(self.constraints)
