@@ -140,12 +140,12 @@ for nn in range(n):
 		for language in languages:
 			language.get_pairwise()
 
-		# Calculate Euclidean distance between languages
+		# Calculate distance between languages
 		for l1 in range(lcount):
 			for l2 in range(l1,lcount):
 				add = 0
 				for i in range(len(languages[l1].pairwise_ranking)):
-					add += languages[l1].pairwise_ranking[i] + languages[l2].pairwise_ranking[i]
+					add += languages[l1].pairwise_ranking[i] - languages[l2].pairwise_ranking[i]
 				distances[l1][l2] = add
 
 	# Cluster!
