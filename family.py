@@ -12,12 +12,17 @@ class Family:
 				r = random.random()
 				if r <= p:
 					# Copy the language but be a binary tree
-					if len(self.languages[language]) < 2:
-						newrank = copy.deepcopy(language.ranking)
-						newname = str(len(self.languages) + int(language.__name__) + 1)
-						newlanguage = Language(language.constraints, newrank, newname)
-						self.languages[language].append(newlanguage)
-						newlanguages.append(newlanguage)
+					if not self.languages[language]:
+						newrank1 = copy.deepcopy(language.ranking)
+						newrank2 = copy.deepcopy(language.ranking)
+						newname1 = str(len(self.languages) + int(language.__name__) + 1)
+						newname2 = str(len(self.languages) + int(language.__name__) + 2)
+						newlanguage1 = Language(language.constraints, newrank1, newname1)
+						newlanguage2 = Language(language.constraints, newrank2, newname2)
+						self.languages[language].append(newlanguage1)
+						self.languages[language].append(newlanguage2)
+						newlanguages.append(newlanguage1)
+						newlanguages.append(newlanguage2)
 				else:
 					# Change the language if it does not have any children
 					if not self.languages[language]:
