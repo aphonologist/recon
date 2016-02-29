@@ -31,7 +31,7 @@ class Language:
 		sorted_constraints = sorted(self.constraints)
 		numcons = len(sorted_constraints)
 		for c1 in range(numcons):
-			for c2 in range(c1, numcons):
+			for c2 in range(numcons):
 				rank = self.search_rank(sorted_constraints[c1], sorted_constraints[c2])
 #				if rank == 0:
 #					rank = 0 - self.search_rank(sorted_constraints[c2], sorted_constraints[c1])
