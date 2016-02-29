@@ -162,8 +162,9 @@ for nn in range(n):
 	goldlabeled = []
 	for family in families:
 		goldlabeled += get_nodes(family.languages)
-	if f > 1:
-		goldlabeled.append(set(languagenames))
+	rootall = set(languagenames)
+	if rootall not in goldlabeled:
+		goldlabeled.append(rootall)
 
 	# Parse cluster results into a tree
 	num = len(thecluster)
