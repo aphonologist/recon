@@ -17,7 +17,7 @@ p = .1
 # Default number of iterations -n
 n = 100
 # Default evaluation metric -e
-e = 'a'
+e = 'e'
 # Default number of families -f
 f = 1
 # Default cluster method -m
