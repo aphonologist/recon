@@ -162,7 +162,8 @@ for nn in range(n):
 	goldlabeled = []
 	for family in families:
 		goldlabeled += get_nodes(family.languages)
-	goldlabeled.append(set(languagenames))
+	if f > 1:
+		goldlabeled.append(set(languagenames))
 
 	# Parse cluster results into a tree
 	num = len(thecluster)
@@ -205,6 +206,7 @@ for nn in range(n):
 				split2.add(split1.pop())
 			rblstack.append(split1)
 			rblstack.append(split2)
+	randombaseline = [x for x in randombaseline if len(x) > 1]
 
 	# In a binary tree, half the nodes are leaf nodes; for evaluation, we may only want internal nodes
 #	goldlabeled = [x for x in goldlabeled if len(x) > 1]
