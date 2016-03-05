@@ -103,6 +103,7 @@ for nn in range(n):
 	lcount = len(languages)
 	distances = [[0 for i in range(lcount)] for i in range(lcount)]
 
+	# Evaluation metrics: should be moved into their own .py
 	if e == 'c':
 		# Cosine Similarity
 
