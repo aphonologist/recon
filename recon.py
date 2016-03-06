@@ -178,11 +178,11 @@ for nn in range(n):
 		thisNode = 'A' + str(num + i + 1)
 		line = thecluster[i]
 		if int(line[0]) <= num:
-			x = int(languagenames[int(line[0])])
+			x = languagenames[int(line[0])]
 		else:
 			x = 'A' + str(int(line[0]))
 		if int(line[1]) <= num:
-			y = int(languagenames[int(line[1])])
+			y = languagenames[int(line[1])]
 		else:
 			y = 'A' + str(int(line[1]))
 		testfamily[thisNode] = [x,y]
