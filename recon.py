@@ -74,8 +74,8 @@ if not noheader:
 for nn in range(n):
 
 	if not mute:
-		# Report every n/10 times for boredom reasons
-		if nn % 10 == 0:
+		# Report every n/100 times for boredom reasons
+		if nn % 100 == 0:
 			print(nn, 'iterations run...', file=sys.stderr)
 
 	# Initialize families
