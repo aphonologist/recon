@@ -163,9 +163,10 @@ for nn in range(n):
 	goldlabeled = []
 	for family in families:
 		goldlabeled += get_nodes(family.languages)
-	rootall = set(languagenames)
+	rootall = set([str(ln) for ln in languagenames])
 	if rootall not in goldlabeled:
 		goldlabeled.append(rootall)
+	print(goldlabeled)###
 
 	# Parse cluster results into a tree
 	num = len(thecluster)
@@ -190,9 +191,11 @@ for nn in range(n):
 
 	# Get labeled nodes from test tree
 	testlabeled = get_nodes(testfamily)
+	print(testlabeled)###
 
 	# Generate null hypothesis baseline: flat tree
-	flatbaseline = [set(languagenames)]
+	flatbaseline = [rootall]
+	print(flatbaseline)###
 
 	# Generate random baseline: random binary tree
 	randombaseline = []
@@ -209,6 +212,7 @@ for nn in range(n):
 			rblstack.append(split1)
 			rblstack.append(split2)
 	randombaseline = [x for x in randombaseline if len(x) > 1]
+	print(randombaseline)
 
 	# In a binary tree, half the nodes are leaf nodes; for evaluation, we may only want internal nodes
 #	goldlabeled = [x for x in goldlabeled if len(x) > 1]
