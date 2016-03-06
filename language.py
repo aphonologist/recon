@@ -6,7 +6,7 @@ class Language:
 		# Ranking: digraph stored as adjacency list
 		self.c = len(constraints)
 		if not ranking:
-			self.ranking = {constraint:[] for constraint in self.constraints}
+			self.ranking = {constraint:{} for constraint in self.constraints}
 		else:
 			self.ranking = ranking
 		self.__name__ = name
@@ -23,7 +23,7 @@ class Language:
 		# Fully, randomly rank the constraint set
 		random.shuffle(self.constraints)
 		for i in range(self.c - 1):
-			self.ranking[self.constraints[i]].append(self.constraints[i+1])
+			self.ranking[self.constraints[i]][self.constraints[i+1]] = {}
 
 	def get_pairwise(self):
 		# Get pairwise comparison vector; 1 if a >> b, -1 if b >> a, 0 if no relation
@@ -33,8 +33,6 @@ class Language:
 		for c1 in range(numcons):
 			for c2 in range(numcons):
 				rank = self.search_rank(sorted_constraints[c1], sorted_constraints[c2])
-#				if rank == 0:
-#					rank = 0 - self.search_rank(sorted_constraints[c2], sorted_constraints[c1])
 				self.pairwise_ranking.append(rank)
 
 	def search_rank(self, c1, c2):
@@ -68,8 +66,7 @@ class Language:
 			r1 = random.randint(0, self.c - 1)
 			constraint = self.constraints[r1]
 			if self.ranking[constraint]:
-				r2 = random.randint(0, len(self.ranking[constraint]) - 1)
-				self.ranking[constraint].pop(r2)
+				self.ranking[constraint].popitem()
 		else:
 			# Add a link
 			r1 = random.randint(0, self.c - 1)
@@ -79,4 +76,4 @@ class Language:
 				con2 = self.constraints[r2]
 				if self.search_rank(con2, con1) + self.search_rank(con1, con2) == 0:
 					# make sure this will not create a loop
-					self.ranking[con1].append(con2)
+					self.ranking[con1][con2] = {}
