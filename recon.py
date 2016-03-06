@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import random, copy, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
+import random, copy, sys, fastcluster, scipy.cluster.hierarchy#, matplotlib.pyplot as plt
+from numpy import array as npa
 from language import Language
 from family import Family
 from get_labeled_nodes import get_nodes
@@ -151,7 +152,7 @@ for nn in range(n):
 				distances[l1][l2] = add
 
 	# Cluster!
-	npdistances = numpy.array(distances)
+	npdistances = npa(distances)
 	thecluster = fastcluster.linkage(npdistances, method=m)
 	# Using average as default; options: single, complete, average, weighted
 
