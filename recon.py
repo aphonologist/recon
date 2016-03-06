@@ -216,12 +216,6 @@ for nn in range(n):
 	randombaseline = [x for x in randombaseline if len(x) > 1]
 #	print(randombaseline)
 
-	# In a binary tree, half the nodes are leaf nodes; for evaluation, we may only want internal nodes
-#	goldlabeled = [x for x in goldlabeled if len(x) > 1]
-#	testlabeled = [x for x in testlabeled if len(x) > 1]
-#	flatbaseline = [x for x in flatbaseline if len(x) > 1]
-#	randombaseline = [x for x in randombaseline if len(x) > 1]
-
 	# Evaluate
 	# Flat tree, random tree, test tree
 	flateval = eval(goldlabeled, flatbaseline)
