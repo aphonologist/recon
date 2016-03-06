@@ -224,23 +224,23 @@ for nn in range(n):
 	# Evaluate
 	# Flat tree, random tree, test tree
 	flateval = eval(goldlabeled, flatbaseline)
-	aveprecision[0] += flateval[0] / n
-	averecall[0] += flateval[1] / n
-	avefscore[0] += flateval [2] / n
+	aveprecision[0] += flateval[0]
+	averecall[0] += flateval[1]
+	avefscore[0] += flateval[2]
 
 	randomeval = eval(goldlabeled, randombaseline)
-	aveprecision[1] += randomeval[0] / n
-	averecall[1] += randomeval[1] / n
-	avefscore[1] += randomeval [2] / n
+	aveprecision[1] += randomeval[0]
+	averecall[1] += randomeval[1]
+	avefscore[1] += randomeval[2]
 	
 	testeval = eval(goldlabeled, testlabeled)
-	aveprecision[2] += testeval[0] / n
-	averecall[2] += testeval[1] / n
-	avefscore[2] += testeval [2] / n
+	aveprecision[2] += testeval[0]
+	averecall[2] += testeval[1]
+	avefscore[2] += testeval [2]
 
 # Print results to screen
-aveprecision = [round(x,3) for x in aveprecision]
-averecall = [round(x,3) for x in averecall]
-avefscore = [round(x,3) for x in avefscore]
+aveprecision = [round(x/n,3) for x in aveprecision]
+averecall = [round(x/n,3) for x in averecall]
+avefscore = [round(x/n,3) for x in avefscore]
 out = [c, l, p, n, f, e, m] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))
