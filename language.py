@@ -21,18 +21,18 @@ class Language:
 
 	def randomize_ranking(self):
 		# Fully, randomly rank the constraint set
-		random.shuffle(self.constraints)
+		shuffled = self.constraints[:]
+		random.shuffle(shuffled)
 		for i in range(self.c - 1):
-			self.ranking[self.constraints[i]][self.constraints[i+1]] = {}
+			self.ranking[shuffled[i]][shuffled[i+1]] = {}
 
 	def get_pairwise(self):
 		# Get pairwise comparison vector; 1 if a >> b, -1 if b >> a, 0 if no relation
 		self.pairwise_ranking = []
-		sorted_constraints = sorted(self.constraints)
-		numcons = len(sorted_constraints)
-		for c1 in range(numcons):
-			for c2 in range(numcons):
-				rank = self.search_rank(sorted_constraints[c1], sorted_constraints[c2])
+#		sorted_constraints = sorted(self.constraints)
+		for c1 in range(self.c):
+			for c2 in range(self.c):
+				rank = self.search_rank(self.constraints[c1], self.constraints[c2])
 				self.pairwise_ranking.append(rank)
 
 	def search_rank(self, c1, c2):
@@ -47,7 +47,6 @@ class Language:
 		return 0
 
 	def normalize_ranking(self):
-		sorted_constraints = sorted(self.constraints)
 		self.get_pairwise()
 		# Get length of vector: square root of sum of squares of values
 		for p in self.pairwise_ranking:
