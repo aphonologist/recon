@@ -29,7 +29,6 @@ class Language:
 	def get_pairwise(self):
 		# Get pairwise comparison vector; 1 if a >> b, -1 if b >> a, 0 if no relation
 		self.pairwise_ranking = []
-#		sorted_constraints = sorted(self.constraints)
 		for c1 in range(self.c):
 			for c2 in range(self.c):
 				rank = self.search_rank(self.constraints[c1], self.constraints[c2])
