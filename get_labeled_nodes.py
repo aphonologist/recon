@@ -10,7 +10,10 @@ def get_nodes(tree):
 				for t in tree[temp]:
 					stack.append(t)
 			else:
-				tempnodes.add(str(temp))
+				if type(temp) == int:
+					tempnodes.add(temp)
+				else:
+					tempnodes.add(temp.__name__)
 		nodes.append(tempnodes)
 	# remove any duplicates from list
 	# duplicates come from branches like L-L-L-L-...-L with only one child

@@ -82,7 +82,8 @@ for nn in range(n):
 
 	for ff in range(f):
 		# Generate random language to use as root for family
-		randomroot = Language(constraints, name=str(1000 * ff))
+		randomname = 1000 * ff
+		randomroot = Language(constraints, name=randomname)
 		randomroot.randomize_ranking()
 		families.append(Family(randomroot))
 
@@ -94,7 +95,7 @@ for nn in range(n):
 		languages += family.get_leaves()
 	languagenames = []
 	for language in languages:
-		languagenames.append(int(language.__name__))
+		languagenames.append(language.__name__)
 	languagenames.sort()
 	# Output gold tree as a .dot file; then call dot -T png -o [tree].png [tree].dot
 #	family.tree_to_dot()
@@ -163,10 +164,10 @@ for nn in range(n):
 	goldlabeled = []
 	for family in families:
 		goldlabeled += get_nodes(family.languages)
-	rootall = set([str(ln) for ln in languagenames])
+	rootall = set(languagenames)
 	if rootall not in goldlabeled:
 		goldlabeled.append(rootall)
-	print(goldlabeled)###
+#	print(goldlabeled)###
 
 	# Parse cluster results into a tree
 	num = len(thecluster)
@@ -191,15 +192,15 @@ for nn in range(n):
 
 	# Get labeled nodes from test tree
 	testlabeled = get_nodes(testfamily)
-	print(testlabeled)###
+#	print(testlabeled)###
 
 	# Generate null hypothesis baseline: flat tree
 	flatbaseline = [rootall]
-	print(flatbaseline)###
+#	print(flatbaseline)###
 
 	# Generate random baseline: random binary tree
 	randombaseline = []
-	rblstack = [set([str(x) for x in languagenames])]
+	rblstack = [rootall]
 	while rblstack:
 		rbltemp = rblstack.pop()
 		randombaseline.append(rbltemp)
@@ -212,7 +213,7 @@ for nn in range(n):
 			rblstack.append(split1)
 			rblstack.append(split2)
 	randombaseline = [x for x in randombaseline if len(x) > 1]
-	print(randombaseline)
+#	print(randombaseline)
 
 	# In a binary tree, half the nodes are leaf nodes; for evaluation, we may only want internal nodes
 #	goldlabeled = [x for x in goldlabeled if len(x) > 1]
