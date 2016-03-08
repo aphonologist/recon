@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import random, copy, sys, fastcluster, scipy.cluster.hierarchy#, matplotlib.pyplot as plt
-from numpy import array as npa
+import random, copy, sys, numpy, fastcluster, scipy.cluster.hierarchy, matplotlib.pyplot as plt
 from language import Language
 from family import Family
 from get_labeled_nodes import get_nodes
@@ -74,8 +73,8 @@ if not noheader:
 for nn in range(n):
 
 	if not mute:
-		# Report every n/100 times for boredom reasons
-		if nn % 100 == 0:
+		# Report every n/10 times for boredom reasons
+		if nn % 10 == 0:
 			print(nn, 'iterations run...', file=sys.stderr)
 
 	# Initialize families
@@ -83,8 +82,7 @@ for nn in range(n):
 
 	for ff in range(f):
 		# Generate random language to use as root for family
-		randomname = 1000 * ff
-		randomroot = Language(constraints, name=randomname)
+		randomroot = Language(constraints, name=str(1000 * ff))
 		randomroot.randomize_ranking()
 		families.append(Family(randomroot))
 
@@ -96,7 +94,7 @@ for nn in range(n):
 		languages += family.get_leaves()
 	languagenames = []
 	for language in languages:
-		languagenames.append(language.__name__)
+		languagenames.append(int(language.__name__))
 	languagenames.sort()
 	# Output gold tree as a .dot file; then call dot -T png -o [tree].png [tree].dot
 #	family.tree_to_dot()
@@ -152,7 +150,7 @@ for nn in range(n):
 				distances[l1][l2] = add
 
 	# Cluster!
-	npdistances = npa(distances)
+	npdistances = numpy.array(distances)
 	thecluster = fastcluster.linkage(npdistances, method=m)
 	# Using average as default; options: single, complete, average, weighted
 
@@ -165,10 +163,10 @@ for nn in range(n):
 	goldlabeled = []
 	for family in families:
 		goldlabeled += get_nodes(family.languages)
-	rootall = set(languagenames)
+	rootall = set([str(ln) for ln in languagenames])
 	if rootall not in goldlabeled:
 		goldlabeled.append(rootall)
-#	print(goldlabeled)###
+	print(goldlabeled)###
 
 	# Parse cluster results into a tree
 	num = len(thecluster)
@@ -178,11 +176,11 @@ for nn in range(n):
 		thisNode = 'A' + str(num + i + 1)
 		line = thecluster[i]
 		if int(line[0]) <= num:
-			x = languagenames[int(line[0])]
+			x = int(languagenames[int(line[0])])
 		else:
 			x = 'A' + str(int(line[0]))
 		if int(line[1]) <= num:
-			y = languagenames[int(line[1])]
+			y = int(languagenames[int(line[1])])
 		else:
 			y = 'A' + str(int(line[1]))
 		testfamily[thisNode] = [x,y]
@@ -193,15 +191,15 @@ for nn in range(n):
 
 	# Get labeled nodes from test tree
 	testlabeled = get_nodes(testfamily)
-#	print(testlabeled)###
+	print(testlabeled)###
 
 	# Generate null hypothesis baseline: flat tree
 	flatbaseline = [rootall]
-#	print(flatbaseline)###
+	print(flatbaseline)###
 
 	# Generate random baseline: random binary tree
 	randombaseline = []
-	rblstack = [rootall]
+	rblstack = [set([str(x) for x in languagenames])]
 	while rblstack:
 		rbltemp = rblstack.pop()
 		randombaseline.append(rbltemp)
@@ -214,28 +212,34 @@ for nn in range(n):
 			rblstack.append(split1)
 			rblstack.append(split2)
 	randombaseline = [x for x in randombaseline if len(x) > 1]
-#	print(randombaseline)
+	print(randombaseline)
+
+	# In a binary tree, half the nodes are leaf nodes; for evaluation, we may only want internal nodes
+#	goldlabeled = [x for x in goldlabeled if len(x) > 1]
+#	testlabeled = [x for x in testlabeled if len(x) > 1]
+#	flatbaseline = [x for x in flatbaseline if len(x) > 1]
+#	randombaseline = [x for x in randombaseline if len(x) > 1]
 
 	# Evaluate
 	# Flat tree, random tree, test tree
 	flateval = eval(goldlabeled, flatbaseline)
-	aveprecision[0] += flateval[0]
-	averecall[0] += flateval[1]
-	avefscore[0] += flateval[2]
+	aveprecision[0] += flateval[0] / n
+	averecall[0] += flateval[1] / n
+	avefscore[0] += flateval [2] / n
 
 	randomeval = eval(goldlabeled, randombaseline)
-	aveprecision[1] += randomeval[0]
-	averecall[1] += randomeval[1]
-	avefscore[1] += randomeval[2]
+	aveprecision[1] += randomeval[0] / n
+	averecall[1] += randomeval[1] / n
+	avefscore[1] += randomeval [2] / n
 	
 	testeval = eval(goldlabeled, testlabeled)
-	aveprecision[2] += testeval[0]
-	averecall[2] += testeval[1]
-	avefscore[2] += testeval [2]
+	aveprecision[2] += testeval[0] / n
+	averecall[2] += testeval[1] / n
+	avefscore[2] += testeval [2] / n
 
 # Print results to screen
-aveprecision = [round(x/n,3) for x in aveprecision]
-averecall = [round(x/n,3) for x in averecall]
-avefscore = [round(x/n,3) for x in avefscore]
+aveprecision = [round(x,3) for x in aveprecision]
+averecall = [round(x,3) for x in averecall]
+avefscore = [round(x,3) for x in avefscore]
 out = [c, l, p, n, f, e, m] + aveprecision + averecall + avefscore
 print('\t'.join([str(x) for x in out]))

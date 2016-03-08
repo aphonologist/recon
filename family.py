@@ -15,8 +15,8 @@ class Family:
 					if not self.languages[language]:
 						newrank1 = copy.deepcopy(language.ranking)
 						newrank2 = copy.deepcopy(language.ranking)
-						newname1 = str(len(self.languages) + int(language.__name__) + 1)
-						newname2 = str(len(self.languages) + int(language.__name__) + 2)
+						newname1 = len(self.languages) + int(language.__name__) + 1
+						newname2 = len(self.languages) + int(language.__name__) + 2
 						newlanguage1 = Language(language.constraints, newrank1, newname1)
 						newlanguage2 = Language(language.constraints, newrank2, newname2)
 						self.languages[language].append(newlanguage1)
