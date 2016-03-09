@@ -12,13 +12,24 @@ def getData(fn):
 	probs = [ 0.1, 0.01, 0.001 ]
 	FRT = ['flat', 'random', 'test']
 	for prob in probs:
+		#print(prob)
 		dataArray[prob] = {}
 		for numi in nums:
 			dataArray[prob][numi] = {}
 			for numj in nums:
 				dataArray[prob][numi][numj] = {}
 				for FRTtype in FRT:
-					dataArray[prob][numi][numj][FRTtype] = {'precision': None, 'recall': None}
+					dataArray[prob][numi][numj][FRTtype] = {'precision': 9.999, 'recall': 9.999}
+
+	for prob in probs:
+		pass
+	#	dataArray[prob] = {}
+	#	for numi in nums:
+	#		dataArray[prob][numi] = {}
+	#		for numj in nums:
+	#			dataArray[prob][numi][numj] = {}
+	#			for FRTtype in FRT:
+	#				dataArray[prob][numi][numj][FRTtype] = {'precision': None, 'recall': None}
 
 		# file columns:
 		# 0 c
@@ -50,6 +61,9 @@ def getData(fn):
 					p = float(row[2])
 					c = int(row[0])
 					l = int(row[1])
+					#print(row)
+					#print(PRF, FRTtype, row[PRF[FRTtype][0]])
+					#print(p, c, l, FRTtype, dataArray[p][c][l])
 					dataArray[p][c][l][FRTtype]['precision'] = row[PRF[FRTtype][0]]
 					dataArray[p][c][l][FRTtype]['recall'] = row[PRF[FRTtype][1]]
 	return dataArray
@@ -57,10 +71,10 @@ def getData(fn):
 def printTable(subArray, prec):
 	global FRT
 	global nums
-	header = """\\begin{{tabular}}{{cc|cc|cc|cc|cc|cc|cc|cc}}
-    ~ & ~ & \\multicolumn{{7}}{{c}}{{\\# languages}} \\\\
-    ~ & ~ & \\multicolumn{{2}}{{c}}{{2}} & \\multicolumn{{2}}{{c}}{{4}} & \\multicolumn{{2}}{{c}}{{8}} & \\multicolumn{{2}}{{c}}{{16}} & \\multicolumn{{2}}{{c}}{{32}} & \\multicolumn{{2}}{{c}}{{64}} & \\multicolumn{{2}}{{c}}{{128}} \\\\
-    \\multicolumn{{2}}{{c|}}{{\\# cons}} & P & R & P & R & P & R & P & R & P & R & P & R & P & R \\\\"""
+	header = """\\begin{tabular}{cc|cc|cc|cc|cc|cc|cc|cc}
+    ~ & ~ & \\multicolumn{14}{c}{\\# languages} \\\\
+    ~ & ~ & \\multicolumn{2}{c}{2} & \\multicolumn{2}{c}{4} & \\multicolumn{2}{c}{8} & \\multicolumn{2}{c}{16} & \\multicolumn{2}{c}{32} & \\multicolumn{2}{c}{64} & \\multicolumn{2}{c}{128} \\\\
+    \\multicolumn{2}{c|}{\\# cons} & P & R & P & R & P & R & P & R & P & R & P & R & P & R \\\\"""
 
 	footer = """\\hline
 	\\end{{tabular}}
@@ -74,24 +88,28 @@ def printTable(subArray, prec):
      \\multirow{{3}}{{*}}{{{}}} & """.format(cons)
 
 		rows = []
+		passed = False
 		for (shorter, longer) in zip(['BF', 'BR', 'T\''], FRT):
-			thisRow = "${}$ & {} & {} & {} & {} & {} & {} & {} & {} & {} & {} & {} & {} & {} & {} \\ ".format(shorter, #
-				subArray[cons][2][longer]['precision'],
-				subArray[cons][2][longer]['recall'],
-				subArray[cons][4][longer]['precision'],
-				subArray[cons][4][longer]['recall'],
-				subArray[cons][8][longer]['precision'],
-				subArray[cons][8][longer]['recall'],
-				subArray[cons][16][longer]['precision'],
-				subArray[cons][16][longer]['recall'],
-				subArray[cons][32][longer]['precision'],
-				subArray[cons][32][longer]['recall'],
-				subArray[cons][64][longer]['precision'],
-				subArray[cons][64][longer]['recall'],
-				subArray[cons][128][longer]['precision'],
-				subArray[cons][128][longer]['recall']
+			thisRow = "${}$ & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} & {:0.3f} \\\\ ".format(shorter, #
+				float(subArray[cons][2][longer]['precision']),
+				float(subArray[cons][2][longer]['recall']),
+				float(subArray[cons][4][longer]['precision']),
+				float(subArray[cons][4][longer]['recall']),
+				float(subArray[cons][8][longer]['precision']),
+				float(subArray[cons][8][longer]['recall']),
+				float(subArray[cons][16][longer]['precision']),
+				float(subArray[cons][16][longer]['recall']),
+				float(subArray[cons][32][longer]['precision']),
+				float(subArray[cons][32][longer]['recall']),
+				float(subArray[cons][64][longer]['precision']),
+				float(subArray[cons][64][longer]['recall']),
+				float(subArray[cons][128][longer]['precision']),
+				float(subArray[cons][128][longer]['recall'])
 			)
+			if passed:
+				thisRow = "~ & "+thisRow
 			rows.append(thisRow)
+			passed = True
 		outrows.append(superRow+'\n'.join(rows))
 #     $BF$ & 1.000 & 0.500 & 1.000 & 0.245 & 1.000 & 0.122 & 1.000 & 0.061 & 1.000 & 0.030 & 1.000 & & 1.000 &\\
 # ~ & $BR$ & 1.000 & 0.500 & 0.566 & 0.387 & 0.212 & 0.171 & 0.098 & 0.085 & 0.043 & 0.039 & & & & \\
