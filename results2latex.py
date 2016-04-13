@@ -196,9 +196,9 @@ if __name__ == '__main__':
 
 		surfs = []
 		for (matrix, cl, lb) in zip(
-			(testMatrixRecall, flatMatrixRecall, randMatrixRecall),
+			(testMatrixPrec, flatMatrixPrec, randMatrixPrec),
 			('r', 'c', 'y'),
-			('T\'', 'BF', 'BM')
+			('T\'', 'BF', 'BR')
 			):
 			Z = np.array(matrix[0.1])
 			print(Z)
