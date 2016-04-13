@@ -2,6 +2,12 @@
 
 import csv
 import argparse
+import matplotlib.pyplot as plt
+
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.mlab as mlab
+from matplotlib import cm
+import numpy as np
 
 def getData(fn):
 	# initialise dataArray
@@ -122,14 +128,115 @@ def printTable(subArray, prec):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='process results into latex table')
 	parser.add_argument('dataFile', help='data file input')
+	parser.add_argument('-g', '--graph', help='make graph', default=False, action="store_true")
 
 	args = parser.parse_args()
 
 	dataArray = getData(args.dataFile)
 	#print(dataArray)
-	tableOut1 = printTable(dataArray[0.1], 0.1)
-	print(tableOut1, '\n')
-	tableOut2 = printTable(dataArray[0.01], 0.01)
-	print(tableOut2, '\n')
-	tableOut3 = printTable(dataArray[0.001], 0.001)
-	print(tableOut3, '\n')
+
+	if not args.graph:
+		tableOut1 = printTable(dataArray[0.1], 0.1)
+		print(tableOut1, '\n')
+		tableOut2 = printTable(dataArray[0.01], 0.01)
+		print(tableOut2, '\n')
+		tableOut3 = printTable(dataArray[0.001], 0.001)
+		print(tableOut3, '\n')
+	else:
+
+
+		def getMatrixFromData(FRType, PR):
+			outMatrix = {}
+			for prob in dataArray:
+				#outMatrix[prob] = {}
+				outMatrix[prob] = []
+				for consts in nums: #dataArray[prob]:
+					toAppend = []
+					for langs in nums: #dataArray[prob][consts]:
+						#outMatrix[prob][consts].append(dataArray[prob][consts][langs][FRType][PR])
+						thisValue = float(dataArray[prob][consts][langs][FRType][PR])
+						if thisValue > 1.000:
+							toAppend.append(np.nan)
+						else:
+							toAppend.append(thisValue)
+
+					outMatrix[prob].append(toAppend)
+						#print(langs, dataArray[prob][consts][langs][FRType][PR])
+			return outMatrix
+#					print(consts)
+#					dataArray[p][c][l][FRTtype]['recall']
+
+		testMatrixPrec = getMatrixFromData('test', 'recall')
+		flatMatrixPrec = getMatrixFromData('flat', 'recall')
+		randMatrixPrec = getMatrixFromData('random', 'recall')
+		testMatrixRecall = getMatrixFromData('test', 'precision')
+		flatMatrixRecall = getMatrixFromData('flat', 'precision')
+		randMatrixRecall = getMatrixFromData('random', 'precision')
+
+		#print(testMatrixPrec)
+		#flatMatrix = {}
+		#randMatrix = {}
+		
+
+
+		#delta = 0.1
+		#x = np.arange(0, 128, delta)
+		#y = np.arange(0, 128, delta)
+		x = [1, 2, 3, 4, 5, 6, 7] # nums
+		y = [1, 2, 3, 4, 5, 6, 7] # nums
+		X, Y = np.meshgrid(x, y)
+		#print(testMatrixPrec[0.1])
+		#print(X, Y)
+
+		fig = plt.figure()
+		#ax = fig.gca(projection='3d')
+		ax = fig.add_subplot(111,projection='3d')
+		#ax.xaxis.set_scale('log')
+		#ax.yaxis.set_scale('log')
+
+		surfs = []
+		for (matrix, cl, lb) in zip(
+			(testMatrixRecall, flatMatrixRecall, randMatrixRecall),
+			('r', 'c', 'y'),
+			('T\'', 'BF', 'BM')
+			):
+			Z = np.array(matrix[0.1])
+			print(Z)
+
+			#fig = plt.figure()
+			#fig.figsize = fig_size
+			#ax = fig.add_subplot(projection='3d')
+
+#			ax.plot_wireframe(X, Y, Z,
+#	                 rstride = 1,
+#	                 cstride = 1)
+			#surf = ax.plot_surface(X, Y, Z,
+			thisGraph = ax.plot_wireframe(X, Y, Z,
+				rstride = 1,
+				cstride = 1,
+				#cmap=cm.RdPu,
+				antialiased = True,
+				color = cl,
+				label = lb)
+			surfs.append(thisGraph)
+#		cset = ax.contourf(X, Y, Z,
+#                   zdir = 'x',
+#                   offset = -3)
+# 
+#		cset = ax.contourf(X, Y, Z,
+#                   zdir = 'y',
+#                   offset = 2)
+# 
+#		cset = ax.contourf(X, Y, Z,
+#                   zdir = 'z',
+#                   offset = -1.5)
+ 
+ 
+ 
+		#ax.view_init(elev=30, azim=-36)
+		#ax.dist=12
+		#fig.colorbar(surf, shrink=0.5, aspect=5) 
+		ax.legend()
+		plt.show()
+
+		#surf = ax.plot_surface(X, Y, Exp_Fric_map, alpha = 1, rstride=1, cstride=1, cmap=cm.winter, linewidth=0.5, antialiased=True)
