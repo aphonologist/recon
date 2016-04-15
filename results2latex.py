@@ -169,74 +169,111 @@ if __name__ == '__main__':
 		testMatrixPrec = getMatrixFromData('test', 'recall')
 		flatMatrixPrec = getMatrixFromData('flat', 'recall')
 		randMatrixPrec = getMatrixFromData('random', 'recall')
+
 		testMatrixRecall = getMatrixFromData('test', 'precision')
 		flatMatrixRecall = getMatrixFromData('flat', 'precision')
 		randMatrixRecall = getMatrixFromData('random', 'precision')
 
+		testMatrixFscore = {}
+		flatMatrixFscore = {}
+		randMatrixFscore = {}
+		for thisP in [0.1, 0.01, 0.001]:
+			thisTestMatrixPrec = np.array(testMatrixPrec[thisP])
+			thisTestMatrixRecall = np.array(testMatrixRecall[thisP])
+			testMatrixFscore[thisP] = 2 * thisTestMatrixPrec * thisTestMatrixRecall / (thisTestMatrixPrec+thisTestMatrixRecall)
+
+			thisFlatMatrixPrec = np.array(flatMatrixPrec[thisP])
+			thisFlatMatrixRecall = np.array(testMatrixRecall[thisP])
+			flatMatrixFscore[thisP] = 2 * thisFlatMatrixPrec * thisFlatMatrixRecall / (thisFlatMatrixPrec+thisFlatMatrixRecall)
+
+			thisRandMatrixPrec = np.array(randMatrixPrec[thisP])
+			thisRandMatrixRecall = np.array(testMatrixRecall[thisP])
+			randMatrixFscore[thisP] = 2 * thisRandMatrixPrec * thisRandMatrixRecall / (thisRandMatrixPrec+thisRandMatrixRecall)
+
+
+		#print(testMatrixFscore)
+		#testMatrixFscore = 2*testMatrixPrec*testMatrixRecall/(testMatrixPrec+testMatrixRecall)
+		#flatMatrixFscore = 2*flatMatrixPrec*flatMatrixRecall/(flatMatrixPrec+flatMatrixRecall)
+		#randMatrixFscore = 2*randMatrixPrec*randMatrixRecall/(randMatrixPrec+randMatrixRecall)
+
 		#print(testMatrixPrec)
 		#flatMatrix = {}
 		#randMatrix = {}
-		
 
 
-		#delta = 0.1
-		#x = np.arange(0, 128, delta)
-		#y = np.arange(0, 128, delta)
-		x = [1, 2, 3, 4, 5, 6, 7] # nums
-		y = [1, 2, 3, 4, 5, 6, 7] # nums
-		X, Y = np.meshgrid(x, y)
-		#print(testMatrixPrec[0.1])
-		#print(X, Y)
+		DATA = {}
+		DATA['p'] = {'test': testMatrixPrec, 'flat': flatMatrixPrec, 'rand': randMatrixPrec}
+		DATA['r'] = {'test': testMatrixRecall, 'flat': flatMatrixRecall, 'rand': randMatrixRecall}
+		DATA['f'] = {'test': testMatrixFscore, 'flat': flatMatrixFscore, 'rand': randMatrixFscore}
+		#print(DATA['f']['test'][0.1])
+		#print(DATA['f']['rand'][0.1])
+		#hargle = bargle
 
-		fig = plt.figure()
-		#ax = fig.gca(projection='3d')
-		ax = fig.add_subplot(111,projection='3d')
-		#ax.xaxis.set_scale('log')
-		#ax.yaxis.set_scale('log')
+		for thisP in [0.1, 0.01, 0.001]:
 
-		surfs = []
-		for (matrix, cl, lb) in zip(
-			(testMatrixPrec, flatMatrixPrec, randMatrixPrec),
-			('r', 'c', 'y'),
-			('T\'', 'BF', 'BR')
-			):
-			Z = np.array(matrix[0.1])
-			print(Z)
+			for thisType in ['p', 'r', 'f']:  # precision, recall, fscore
 
-			#fig = plt.figure()
-			#fig.figsize = fig_size
-			#ax = fig.add_subplot(projection='3d')
+				#delta = 0.1
+				#x = np.arange(0, 128, delta)
+				#y = np.arange(0, 128, delta)
+				x = [1, 2, 3, 4, 5, 6, 7] # nums
+				y = [1, 2, 3, 4, 5, 6, 7] # nums
+				X, Y = np.meshgrid(x, y)
+				#print(testMatrixPrec[0.1])
+				#print(X, Y)
 
-#			ax.plot_wireframe(X, Y, Z,
-#	                 rstride = 1,
-#	                 cstride = 1)
-			#surf = ax.plot_surface(X, Y, Z,
-			thisGraph = ax.plot_wireframe(X, Y, Z,
-				rstride = 1,
-				cstride = 1,
-				#cmap=cm.RdPu,
-				antialiased = True,
-				color = cl,
-				label = lb)
-			surfs.append(thisGraph)
-#		cset = ax.contourf(X, Y, Z,
-#                   zdir = 'x',
-#                   offset = -3)
-# 
-#		cset = ax.contourf(X, Y, Z,
-#                   zdir = 'y',
-#                   offset = 2)
-# 
-#		cset = ax.contourf(X, Y, Z,
-#                   zdir = 'z',
-#                   offset = -1.5)
- 
- 
- 
-		#ax.view_init(elev=30, azim=-36)
-		#ax.dist=12
-		#fig.colorbar(surf, shrink=0.5, aspect=5) 
-		ax.legend()
-		plt.show()
+				fig = plt.figure()
+				#ax = fig.gca(projection='3d')
+				ax = fig.add_subplot(111,projection='3d')
+				#ax.xaxis.set_scale('log')
+				#ax.yaxis.set_scale('log')
 
-		#surf = ax.plot_surface(X, Y, Exp_Fric_map, alpha = 1, rstride=1, cstride=1, cmap=cm.winter, linewidth=0.5, antialiased=True)
+				surfs = []
+				for (matrix, cl, lb) in zip(
+					(DATA[thisType]['test'], DATA[thisType]['flat'], DATA[thisType]['rand']),
+					#(testMatrixPrec, flatMatrixPrec, randMatrixPrec),
+					('r', 'c', 'y'),
+					('T\'', 'BF', 'BR')
+					):
+					Z = np.array(matrix[thisP])
+					print(thisType, thisP, Z)
+
+					#fig = plt.figure()
+					#fig.figsize = fig_size
+					#ax = fig.add_subplot(projection='3d')
+
+		#			ax.plot_wireframe(X, Y, Z,
+		#	                 rstride = 1,
+		#	                 cstride = 1)
+					#surf = ax.plot_surface(X, Y, Z,
+					thisGraph = ax.plot_wireframe(X, Y, Z,
+						rstride = 1,
+						cstride = 1,
+						#cmap=cm.RdPu,
+						antialiased = True,
+						color = cl,
+						label = lb)
+					surfs.append(thisGraph)
+		#		cset = ax.contourf(X, Y, Z,
+		#                   zdir = 'x',
+		#                   offset = -3)
+		#
+		#		cset = ax.contourf(X, Y, Z,
+		#                   zdir = 'y',
+		#                   offset = 2)
+		#
+		#		cset = ax.contourf(X, Y, Z,
+		#                   zdir = 'z',
+		#                   offset = -1.5)
+
+
+
+				#ax.view_init(elev=30, azim=-36)
+				#ax.dist=12
+				#fig.colorbar(surf, shrink=0.5, aspect=5)
+				ax.legend()
+				#plt.show()
+				for thisFormat in ["pdf", "svg", "png"]:
+					plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat)
+
+				#surf = ax.plot_surface(X, Y, Exp_Fric_map, alpha = 1, rstride=1, cstride=1, cmap=cm.winter, linewidth=0.5, antialiased=True)
