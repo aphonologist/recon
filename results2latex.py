@@ -228,7 +228,7 @@ if __name__ == '__main__':
 				fig = plt.figure()
 				#ax = fig.gca(projection='3d')
 				fig.patch.set_facecolor('white')
-				fig.patch.set_alpha(0.2)
+				fig.patch.set_alpha(0)
 				ax = fig.add_subplot(111,projection='3d')
 				ax.patch.set_facecolor('white')
 				ax.patch.set_alpha(0)
@@ -241,18 +241,28 @@ if __name__ == '__main__':
 				fig.gca().set_ylabel("constraints")
 				fig.gca().set_xlabel("languages")
 				fig.gca().set_zlabel(typeMapping[thisType])
+				fig.gca().tick_params(colors='white')
+				fig.gca().xaxis.label.set_color('white')
+				fig.gca().yaxis.label.set_color('white')
+				fig.gca().zaxis.label.set_color('white')
 
 
-				ax.w_xaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
-				ax.w_yaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
-				ax.w_zaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
+				ax.w_xaxis._axinfo.update({'grid' : {'color': (0.85, 0.85, 0.85, 1)}})
+				ax.w_yaxis._axinfo.update({'grid' : {'color': (0.85, 0.85, 0.85, 1)}})
+				ax.w_zaxis._axinfo.update({'grid' : {'color': (0.85, 0.85, 0.85, 1)}})
 
 				surfs = []
 				for (matrix, cl, lb) in zip(
-					(DATA[thisType]['test'], DATA[thisType]['flat'], DATA[thisType]['rand']),
+#					(DATA[thisType]['test'], DATA[thisType]['flat'], DATA[thisType]['rand']),
+#					#(testMatrixPrec, flatMatrixPrec, randMatrixPrec),
+#					('r', 'c', 'y'),
+#					('T\'', 'BF', 'BR')
+
+					(DATA[thisType]['flat'], DATA[thisType]['rand'], DATA[thisType]['test']),
 					#(testMatrixPrec, flatMatrixPrec, randMatrixPrec),
-					('r', 'c', 'y'),
-					('T\'', 'BF', 'BR')
+					('c', 'y', 'r'),
+					('BF', 'BR', 'T\'')
+
 					):
 					Z = np.array(matrix[thisP])
 					print(thisType, thisP, Z)
@@ -290,12 +300,12 @@ if __name__ == '__main__':
 				#ax.view_init(elev=30, azim=-36)
 				#ax.dist=12
 				#fig.colorbar(surf, shrink=0.5, aspect=5)
-				ax.legend()
+				ax.legend(loc='upper center')
 				#plt.show()
 				for thisFormat in ["pdf", "svg", "png"]:
 					extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
 					#fig.savefig('ax2_figure.png', bbox_inches=extent)
 					#plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat)
-					plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat, bbox_inches=extent.expanded(1.05, 1.05))
+					plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat, bbox_inches=extent.expanded(1.05, 1.05), dpi=600)
 
 				#surf = ax.plot_surface(X, Y, Exp_Fric_map, alpha = 1, rstride=1, cstride=1, cmap=cm.winter, linewidth=0.5, antialiased=True)
