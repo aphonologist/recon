@@ -209,6 +209,7 @@ if __name__ == '__main__':
 		#print(DATA['f']['rand'][0.1])
 		#hargle = bargle
 
+		typeMapping = {'p': 'precision', 'r': 'recall', 'f': 'f score'}
 		actualLabels = [2, 4, 8, 16, 32, 64, 128]
 
 		for thisP in [0.1, 0.01, 0.001]:
@@ -239,7 +240,7 @@ if __name__ == '__main__':
 				fig.gca().set_xticklabels(actualLabels)
 				fig.gca().set_ylabel("constraints")
 				fig.gca().set_xlabel("languages")
-				fig.gca().set_zlabel("fscore")
+				fig.gca().set_zlabel(typeMapping[thisType])
 
 
 				ax.w_xaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
