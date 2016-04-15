@@ -209,6 +209,8 @@ if __name__ == '__main__':
 		#print(DATA['f']['rand'][0.1])
 		#hargle = bargle
 
+		actualLabels = [2, 4, 8, 16, 32, 64, 128]
+
 		for thisP in [0.1, 0.01, 0.001]:
 
 			for thisType in ['p', 'r', 'f']:  # precision, recall, fscore
@@ -224,9 +226,25 @@ if __name__ == '__main__':
 
 				fig = plt.figure()
 				#ax = fig.gca(projection='3d')
+				fig.patch.set_facecolor('white')
+				fig.patch.set_alpha(0.2)
 				ax = fig.add_subplot(111,projection='3d')
+				ax.patch.set_facecolor('white')
+				ax.patch.set_alpha(0)
+
 				#ax.xaxis.set_scale('log')
 				#ax.yaxis.set_scale('log')
+
+				fig.gca().set_yticklabels(actualLabels)
+				fig.gca().set_xticklabels(actualLabels)
+				fig.gca().set_ylabel("constraints")
+				fig.gca().set_xlabel("languages")
+				fig.gca().set_zlabel("fscore")
+
+
+				ax.w_xaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
+				ax.w_yaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
+				ax.w_zaxis._axinfo.update({'grid' : {'color': (0.7, 0.7, 0.7, 1)}})
 
 				surfs = []
 				for (matrix, cl, lb) in zip(
@@ -274,6 +292,9 @@ if __name__ == '__main__':
 				ax.legend()
 				#plt.show()
 				for thisFormat in ["pdf", "svg", "png"]:
-					plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat)
+					extent = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+					#fig.savefig('ax2_figure.png', bbox_inches=extent)
+					#plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat)
+					plt.savefig('{}{}.{}'.format(thisType, str(thisP).replace('.', ''), thisFormat), format=thisFormat, bbox_inches=extent.expanded(1.05, 1.05))
 
 				#surf = ax.plot_surface(X, Y, Exp_Fric_map, alpha = 1, rstride=1, cstride=1, cmap=cm.winter, linewidth=0.5, antialiased=True)
